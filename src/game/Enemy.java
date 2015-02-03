@@ -155,6 +155,19 @@ public class Enemy {
 
 	
 	
+	
+	
+	
+	
+	//	
+	//	
+	//	
+	//	
+	//	Getters and setters:
+	//	
+	//	
+	//	
+	//	
 
 	public void setHealth(int health) {
 		this.health = health;

@@ -12,7 +12,7 @@ public class Bullet {
 			private int x, y, vel;
 			
 			public Bullet()	{
-				if(Game.player.isHeadTo())	{
+				if(Game.player.isHeadRight())	{
 					this.x = Game.player.getxPos() + 90;
 					this.y = Game.player.getyPos() + 75; //shoots from center of 
 				}
@@ -21,7 +21,7 @@ public class Bullet {
 					this.y = Game.player.getyPos() + 75; //shoots from center of 
 				}
 				shot = new Rectangle(this.x,this.y, 1, 1);
-				if(Game.player.isHeadTo()){
+				if(Game.player.isHeadRight()){
 					vel = -1;
 				}
 				else	{
@@ -41,7 +41,15 @@ public class Bullet {
 			}
 
 			
-			
+		//	
+		//	
+		//	
+		//	
+		//			Getters and setters:
+		//	
+		//	
+		//	
+		//	
 			
 			
 			

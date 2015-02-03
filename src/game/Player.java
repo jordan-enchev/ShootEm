@@ -21,7 +21,7 @@ public class Player {
     public  boolean goingLeft;
     public  boolean goingRight;
     
-    public static boolean headTo;
+    public static boolean headRight;
     public static boolean hasShot;
 	
 	
@@ -74,7 +74,7 @@ public class Player {
 				else	{
 					goingLeft = false;
 				}	
-				headTo = true;
+				headRight = true;
 				
 			}
 			if(goingRight)	{
@@ -85,7 +85,7 @@ public class Player {
 					else	{
 						goingRight = false;
 					}	
-					headTo = false;
+					headRight = false;
 			}
 			
 			
@@ -125,6 +125,43 @@ public class Player {
 		g.drawImage(Assets.player, this.xPos, this.yPos, null);	
 	}
 
+
+	
+	public void loseHealth(int damage)
+	{	
+		if(ifHit())	{
+		setHealth(getHealth()-damage);
+		System.out.println("Damage taken " + damage);
+		System.out.println("Health left " + getHealth());
+		}
+	}
+	
+	public boolean ifHit()	{
+		rand = new Random();
+		int hit = rand.nextInt(1-0+1);
+		if(hit == 1)	{
+			return true;
+		}
+		return false;
+		
+	}
+	public boolean isDead()	{
+		if (getHealth() <= 0){
+			return true;
+		}
+		return false;
+	}
+
+	
+//	
+//	
+//	
+//	
+//	Getters and setters:
+//	
+//	
+//	
+//	
 	public int getxPos() {
 		return xPos;
 	}
@@ -153,38 +190,10 @@ public class Player {
 		this.health = health;
 	}
 	
-	public void loseHealth(int damage)
-	{	
-		if(ifHit())	{
-		setHealth(getHealth()-damage);
-		System.out.println("Damage taken " + damage);
-		System.out.println("Health left " + getHealth());
-		}
-	}
-	
-	public boolean ifHit()	{
-		rand = new Random();
-		int hit = rand.nextInt(1-0+1);
-		if(hit == 1)	{
-			return true;
-		}
-		return false;
-		
-	}
-	public boolean isDead()	{
-		if (getHealth() <= 0){
-			return true;
-		}
-		return false;
+	public boolean isHeadRight() {		//returns true if headed right
+		return headRight;
 	}
 
-	public boolean isHeadTo() {
-		return headTo;
-	}
-
-	public void setHeadTo(boolean headTo) {
-		Player.headTo = headTo;
-	}
 
 	public boolean isHasShot() {
 		return hasShot;
