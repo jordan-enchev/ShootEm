@@ -19,8 +19,7 @@ public class Assets {
 
         player = sheet.crop(cropPoint.x, cropPoint.y, width, height);
         enemy = otherSheet.crop(otherCrop.x, otherCrop.y, otherWidth, otherHeight);
-        
-        
+   
     }
 	public static void setCropPoint(Rectangle newCrop) {
 		Assets.cropPoint = newCrop;

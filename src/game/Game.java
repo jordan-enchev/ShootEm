@@ -15,6 +15,7 @@ public class Game implements Runnable {
 	private Graphics g = null;
 	private BufferStrategy bs = null;
 	private Input iHandler = null;
+	private int xDis, yDis, xDisEnd, yDisEnd;
 		
 		
 	public static boolean running = false;
@@ -25,7 +26,6 @@ public class Game implements Runnable {
 	public static ArrayList<Bullet> bullets = null;
 
 	public Game()	{
-		
 	}
 	
 	public void init()	{
@@ -55,6 +55,10 @@ public class Game implements Runnable {
 								enemies = new ArrayList<Enemy>();
 								bullets = new ArrayList<Bullet>();
 								enemies.add(new Enemy(400, 450, 10));	
+								this.xDis = 0;
+								this.xDisEnd = xDis + 800;
+								this.yDis = 0;
+								this.yDisEnd = yDis + 600;
 							}
 						}
 			
@@ -102,17 +106,24 @@ public class Game implements Runnable {
         //Clear the screen at every frame
         g.clearRect(0, 0, CONSTANTS.WINDOW_WIDTH, CONSTANTS.WINDOW_HEIGHT);
         //Beginning of drawing things on the screen
-
-        g.drawImage(Assets.background, 0, 0, CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, null);
         
-        player.render(g);
+//        if(player.getxPos() > CONSTANTS.WINDOW_WIDTH / 2 && player.isMoving())	{
+//        	g.drawImage(Assets.background, xDis -= CONSTANTS.VEL, yDis, xDisEnd -= CONSTANTS.VEL, yDisEnd, null);
+//        }
+//        else if(player.getxPos() < CONSTANTS.WINDOW_WIDTH / 2 && player.isMoving())	{
+//        	g.drawImage(Assets.background, xDis += CONSTANTS.VEL, yDis, xDisEnd += CONSTANTS.VEL, yDisEnd, null);
+//        }
+//        else
+        	g.drawImage(Assets.background, xDis, yDis, xDisEnd, yDisEnd, null);
+        
+        
         for (Enemy enemy : enemies) {
 			enemy.render(g);
 		}
         for (Bullet bullet : bullets) {
 			bullet.render(g);
 		}
-       
+        player.render(g);
         //End of drawing objects
 
         //Enables the buffer
@@ -166,7 +177,7 @@ public class Game implements Runnable {
         }
 
         //Calls the stop method to ensure everything has been stopped
-        stop();
+        stop();      //Setting the while
     }
 
     //Creating a start method for the Thread to start our game

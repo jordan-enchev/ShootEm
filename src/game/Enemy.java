@@ -5,6 +5,8 @@ import gfx.Assets;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Random;
 
 import constants.CONSTANTS;
@@ -54,20 +56,11 @@ public class Enemy {
 			}
 		
 		}	
-		
-		else	{
-			try {
-				this.finalize();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 	}
 	
 	public void render(Graphics g) {
 			
-		g.drawImage(Assets.enemy, this.xPos + 30, this.yPos, (lastDir)*40, 60, null);
+		g.drawImage(Assets.enemy, this.xPos, this.yPos, (lastDir)*40, 60, null);
 	
 		}
 	
@@ -84,15 +77,15 @@ public class Enemy {
 				newCrop.x = 40;
 			}
 		}
-		else {
-			if(newCrop.x + 40 < 361)	{
-				newCrop.x += 40;
-			}
-			else {
-				newCrop.x = 320;
-			}
-			
-		}
+//		else {
+//			if(newCrop.x + 40 < 361)	{
+//				newCrop.x += 40;
+//			}
+//			else {
+//				newCrop.x = 320;
+//			}
+//			
+//		}
 			
 			
 			Assets.setOtherCrop(newCrop);

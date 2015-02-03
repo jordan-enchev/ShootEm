@@ -27,7 +27,7 @@ public class Player {
 	
 	public Player()	{
 		this.health = 100;
-		this.ammo = 30;	
+		//this.ammo = 30;	
 		this.img = Assets.player;
 		xPos = 0;
 		yPos = 400;
@@ -94,7 +94,10 @@ public class Player {
 			
 		}
 		
-
+	public boolean isMoving()	{
+		return (goingDown || goingLeft || goingRight || goingUp);
+	}
+	
 	public void changeAsset()	{
 		
 				Rectangle newCrop = Assets.getCropPoint();
