@@ -3,6 +3,7 @@ package game;
 import gfx.Assets;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 
@@ -54,7 +55,7 @@ public class Game implements Runnable {
 								System.out.println("Player inited");
 								enemies = new ArrayList<Enemy>();
 								bullets = new ArrayList<Bullet>();
-								enemies.add(new Enemy(400, 450, 100));	
+								enemies.add(new Enemy(400, 450, 50));	
 								this.xDis = 0;
 								this.xDisEnd = xDis + 800;
 								this.yDis = 0;
@@ -73,12 +74,14 @@ public class Game implements Runnable {
 		player.tick();
 		player.changeAsset();
 		for (Enemy enemy : enemies) {
+			if(enemy.isDead())	{	
+				enemy.finalize();
+			}
 			enemy.tick();
 		}
 		for (Bullet bullet : bullets) {
 			if(!bullet.inBounds() || bullet.hasHit())	{
-				bullet.setX(-1);
-				bullet.setY(-1);
+				bullet.finalize();
 			}
 			else
 			bullet.tick();
@@ -223,9 +226,7 @@ public class Game implements Runnable {
 	public static ArrayList<Bullet> getBullets() {
 		return bullets;
 	}
-	public void finalize()	{
-		
-	}
+	
 
     
 

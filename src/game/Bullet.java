@@ -63,7 +63,11 @@ public class Bullet {
 				}
 				return false;
 			}
-
+			public void finalize()	{			//to graveyard
+					this.setX(0);
+					this.setY(610);
+					this.setShot(new Rectangle(this.getX(), this.getY(), 1, 1));
+			}
 			
 		//	
 		//	
@@ -104,5 +108,10 @@ public class Bullet {
 			public void setHasHit(boolean hasHit) {
 				this.hasHit = hasHit;
 			}
+
+			public void setShot(Rectangle shot) {
+				this.shot = shot;
+			}
+			
 
 }

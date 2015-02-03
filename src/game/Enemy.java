@@ -144,6 +144,11 @@ public class Enemy {
 		}
 		return false;	
 	}
+	public void finalize()	{
+		this.setxPos(0);
+		this.setyPos(610);
+		this.boundingBox.setBounds(this.getxPos(), this.getyPos(), 1, 1);
+	}
 	
 	//	
 	//	
