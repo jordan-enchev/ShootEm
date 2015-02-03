@@ -14,7 +14,7 @@ public class Enemy {
 	private BufferedImage img;
 	private int xPos, yPos, health;
 	private Rectangle boundingBox;
-	private boolean goingLeft, goingRight;
+	
 	private Random rand;
 	private int damage = 0;
 	private int lastDir;
@@ -101,15 +101,11 @@ public class Enemy {
 		
 		if (getxPos() <= x)	{	//left direction
 			setxPos(getxPos() + CONSTANTS.VEL/2);
-			goingRight = true;
-			goingLeft = false;
 			lastDir = -1;
 		}
 		if(getxPos() > x)	{	
 				
 			setxPos(getxPos() - CONSTANTS.VEL/2);	
-			goingLeft = true;
-			goingRight = false;
 			lastDir = 1;
 		}
 	}
