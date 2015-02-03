@@ -41,7 +41,8 @@ public class Enemy {
 			for (Bullet bullet : Game.bullets) {
 				
 				if(Intersects(bullet.getShot()))	{
-					loseHP();				
+					loseHP();	
+					bullet.setHasHit(true);
 				}
 			}
 			
@@ -55,7 +56,7 @@ public class Enemy {
 				changeAsset();
 			}
 		
-		}	
+		}		
 	}
 	
 	public void render(Graphics g) {

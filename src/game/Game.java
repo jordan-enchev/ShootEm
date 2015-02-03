@@ -54,7 +54,7 @@ public class Game implements Runnable {
 								System.out.println("Player inited");
 								enemies = new ArrayList<Enemy>();
 								bullets = new ArrayList<Bullet>();
-								enemies.add(new Enemy(400, 450, 10));	
+								enemies.add(new Enemy(400, 450, 100));	
 								this.xDis = 0;
 								this.xDisEnd = xDis + 800;
 								this.yDis = 0;
@@ -68,18 +68,17 @@ public class Game implements Runnable {
 	
 
 	private void tick() {  
-		if(enemies.isEmpty())	{
-			enemies.add(new Enemy(400, 450, 10));	
-		}
 		
+			
 		player.tick();
 		player.changeAsset();
 		for (Enemy enemy : enemies) {
 			enemy.tick();
 		}
 		for (Bullet bullet : bullets) {
-			if(!bullet.inBounds())	{
-				
+			if(!bullet.inBounds() || bullet.hasHit())	{
+				bullet.setX(-1);
+				bullet.setY(-1);
 			}
 			else
 			bullet.tick();
@@ -223,6 +222,9 @@ public class Game implements Runnable {
 
 	public static ArrayList<Bullet> getBullets() {
 		return bullets;
+	}
+	public void finalize()	{
+		
 	}
 
     

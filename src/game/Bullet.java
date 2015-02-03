@@ -10,6 +10,7 @@ public class Bullet {
 
 			private Rectangle shot;
 			private int x, y, vel;
+			private boolean hasHit;
 			
 			public Bullet()	{
 				if(Game.player.isHeadedRight())	{
@@ -27,6 +28,7 @@ public class Bullet {
 				else	{
 					vel = 1;
 				}
+				hasHit = false;
 				
 			}
  			
@@ -93,6 +95,14 @@ public class Bullet {
 
 			public Rectangle getShot() {
 				return shot;
+			}
+
+			public boolean hasHit() {
+				return hasHit;
+			}
+
+			public void setHasHit(boolean hasHit) {
+				this.hasHit = hasHit;
 			}
 
 }
