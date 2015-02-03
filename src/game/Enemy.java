@@ -47,16 +47,18 @@ public class Enemy {
 			Game.player.loseHealth(damage);
 			changeAsset();
 		}
-		
-		if (isDead()) {
-			try {
-				Game.enemy.finalize();
-			} catch (Throwable e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		for (Enemy enemy : Game.enemies) {
+	
+			if (isDead()) {
+				try {
+					enemy.finalize();
+				} catch (Throwable e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			
-		}
+			}
+		}	
 	}
 	
 	public void render(Graphics g) {

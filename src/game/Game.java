@@ -4,6 +4,7 @@ import gfx.Assets;
 
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 
 import Display.Display;
 import constants.CONSTANTS;
@@ -20,7 +21,7 @@ public class Game implements Runnable {
 	private Thread thread;
 	
 	public static Player player = null;
-	public static Enemy enemy = null;	
+	public static ArrayList<Enemy> enemies = null;	
 
 	public Game()	{
 		
@@ -50,9 +51,11 @@ public class Game implements Runnable {
 							}
 							else {
 								System.out.println("Player inited");
+								enemies = new ArrayList<Enemy>();
+								enemies.add(new Enemy(400, 450, 100));	
+								enemies.add(new Enemy(150, 480, 100));
 							}
-							enemy = new Enemy(600, 450, 100);
-							
+												
 						}
 			
 		}
@@ -61,7 +64,10 @@ public class Game implements Runnable {
 	private void tick() {  
 		player.tick();
 		player.changeAsset();
-		enemy.tick();
+		for (Enemy enemy : enemies) {
+			enemy.tick();
+		}
+		
 		
     }
 	
@@ -87,9 +93,9 @@ public class Game implements Runnable {
         g.drawImage(Assets.background, 0, 0, CONSTANTS.GAME_WIDTH, CONSTANTS.GAME_HEIGHT, null);
         
         player.render(g);
-//        for (Enemy enemy : enemies) {
+        for (Enemy enemy : enemies) {
 			enemy.render(g);
-//		}
+		}
        
         //End of drawing objects
 
