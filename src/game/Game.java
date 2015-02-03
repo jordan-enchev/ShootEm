@@ -64,7 +64,6 @@ public class Game implements Runnable {
 	
 
 	private void tick() {  
-		
 		if(enemies.isEmpty())	{
 			enemies.add(new Enemy(400, 450, 10));	
 		}
@@ -75,12 +74,15 @@ public class Game implements Runnable {
 			enemy.tick();
 		}
 		for (Bullet bullet : bullets) {
+			if(!bullet.inBounds())	{
 				
+			}
+			else
 			bullet.tick();
 		}
 		
 		
-    }
+     }
 	
     //The method that will draw everything on the canvas
     private void render() {

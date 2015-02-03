@@ -56,7 +56,7 @@ public class Bullet {
 			}
 			
 			public boolean inBounds(){
-				if(x > 0 && x < CONSTANTS.GAME_WIDTH && y > 0 && y < CONSTANTS.GAME_HEIGHT){
+				if(x >= 0 && x <= CONSTANTS.GAME_WIDTH && y >= 0 && y <= CONSTANTS.GAME_HEIGHT){
 					return true;
 				}
 				return false;
