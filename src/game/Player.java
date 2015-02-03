@@ -5,6 +5,7 @@ import gfx.Assets;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.util.Random;
 
 import constants.CONSTANTS;
 
@@ -13,11 +14,15 @@ public class Player {
 	private BufferedImage img;
 	private int xPos, yPos;
 	private Rectangle boundingBox;
+	private Random rand;
 	
-	public static boolean goingUp;
-    public static boolean goingDown;
-    public static boolean goingLeft;
-    public static boolean goingRight;
+	public  boolean goingUp;
+    public  boolean goingDown;
+    public  boolean goingLeft;
+    public  boolean goingRight;
+    
+    public static boolean headTo;
+    public static boolean hasShot;
 	
 	
 	public Player()	{
@@ -30,9 +35,18 @@ public class Player {
 	}
 
 	public void tick()	{
+
 		
+		
+		if(isDead()){
+			Game.running = false;
+			System.out.println("You died!!!");
+		}
+
 		boundingBox.setBounds(xPos, yPos, 100, 150);
 			
+
+		
 			if(goingDown)	{
 				
 					if(getyPos() < CONSTANTS.GAME_HEIGHT - 180)	{
@@ -43,7 +57,7 @@ public class Player {
 					}	
 			}
 			if(goingUp)	{
-				if(getyPos() > 350)	{
+				if(getyPos() > 360)	{
 					
 						setyPos(yPos - CONSTANTS.VEL);
 					}
@@ -60,6 +74,7 @@ public class Player {
 				else	{
 					goingLeft = false;
 				}	
+				headTo = true;
 				
 			}
 			if(goingRight)	{
@@ -70,6 +85,7 @@ public class Player {
 					else	{
 						goingRight = false;
 					}	
+					headTo = false;
 			}
 			
 			
@@ -128,10 +144,55 @@ public class Player {
 	public Rectangle getBoundingBox() {
 		return boundingBox;
 	}
+
+	public int getHealth() {
+		return health;
+	}
+
+	public void setHealth(int health) {
+		this.health = health;
+	}
 	
+	public void loseHealth(int damage)
+	{	
+		if(ifHit())	{
+		setHealth(getHealth()-damage);
+		System.out.println("Damage taken " + damage);
+		System.out.println("Health left " + getHealth());
+		}
+	}
+	
+	public boolean ifHit()	{
+		rand = new Random();
+		int hit = rand.nextInt(1-0+1);
+		if(hit == 1)	{
+			return true;
+		}
+		return false;
+		
+	}
+	public boolean isDead()	{
+		if (getHealth() <= 0){
+			return true;
+		}
+		return false;
+	}
 
+	public boolean isHeadTo() {
+		return headTo;
+	}
 
+	public void setHeadTo(boolean headTo) {
+		Player.headTo = headTo;
+	}
 
+	public boolean isHasShot() {
+		return hasShot;
+	}
+
+	public void setHasShot(boolean hasShot) {
+		Player.hasShot = hasShot;
+	}
 
 
 }

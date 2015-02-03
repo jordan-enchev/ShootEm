@@ -3,9 +3,7 @@ package game;
 import gfx.Assets;
 
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
-import java.util.ArrayList;
 
 import Display.Display;
 import constants.CONSTANTS;
@@ -16,17 +14,13 @@ public class Game implements Runnable {
 	private Graphics g = null;
 	private BufferStrategy bs = null;
 	private Input iHandler = null;
-	
-	
 		
 		
 	public static boolean running = false;
 	private Thread thread;
 	
 	public static Player player = null;
-	public static Enemy enemy = null;
-	
-	
+	public static Enemy enemy = null;	
 
 	public Game()	{
 		
@@ -68,7 +62,7 @@ public class Game implements Runnable {
 		player.tick();
 		player.changeAsset();
 		enemy.tick();
-
+		
     }
 	
     //The method that will draw everything on the canvas

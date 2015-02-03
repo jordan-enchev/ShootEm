@@ -1,7 +1,5 @@
 package constants;
 
-import java.awt.Rectangle;
-import java.util.ArrayList;
 
 public class CONSTANTS {
 	public static final int WINDOW_WIDTH = 810;
