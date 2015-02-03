@@ -12,16 +12,16 @@ public class Bullet {
 			private int x, y, vel;
 			
 			public Bullet()	{
-				if(Game.player.isHeadRight())	{
+				if(Game.player.isHeadedRight())	{
 					this.x = Game.player.getxPos() + 90;
-					this.y = Game.player.getyPos() + 75; //shoots from center of 
+					this.y = Game.player.getyPos() + 75; 
 				}
 				else	{
 					this.x = Game.player.getxPos();
-					this.y = Game.player.getyPos() + 75; //shoots from center of 
+					this.y = Game.player.getyPos() + 75; 
 				}
 				shot = new Rectangle(this.x,this.y, 1, 1);
-				if(Game.player.isHeadRight()){
+				if(Game.player.isHeadedRight()){
 					vel = -1;
 				}
 				else	{
@@ -32,12 +32,32 @@ public class Bullet {
 			
 			
 			public void tick()	{		
+				
 				this.setX(getX() + (vel)*CONSTANTS.VEL*2);
+				
+				
+				
+				
+				if(!inBounds()){
+					try {
+						this.finalize();
+					} catch (Throwable e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 
 			}
 			public void render(Graphics g)	{
 				g.setColor(Color.green);
 				g.fillRect(getX(), getY(), 10, 10);
+			}
+			
+			public boolean inBounds(){
+				if(x>0 && x <= CONSTANTS.GAME_WIDTH && y > 0 && y <= CONSTANTS.GAME_HEIGHT){
+					return true;
+				}
+				return false;
 			}
 
 			

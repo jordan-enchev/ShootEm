@@ -34,7 +34,7 @@ public class Enemy {
 	public void tick()	{
 		
 		boundingBox.setBounds(xPos, yPos, 40, 60);
-		
+		this.loseHP();
 		
 		
 		if(!Intersects(Game.player.getBoundingBox()))	{
@@ -64,9 +64,7 @@ public class Enemy {
 	public void render(Graphics g) {
 			
 		g.drawImage(Assets.enemy, this.xPos + 30, this.yPos, (lastDir)*40, 60, null);
-
 	
-			
 		}
 	
 	public void changeAsset()	{
@@ -132,7 +130,7 @@ public class Enemy {
 	
 	public boolean isHit(Rectangle shot)	{
 		
-		if(this.boundingBox.contains(shot) || shot.contains(this.boundingBox))	{
+		if(this.boundingBox.contains(shot))	{
 			return true;
 		}
 		return false;
@@ -140,11 +138,15 @@ public class Enemy {
 	}
 			
 	
-//	public void loseHP()	{
-//		if(isHit(Game.player.getShot().getShot()))	{
-//		setHealth(health - 5);
-//		}
-//	}
+	public void loseHP()	{
+		for (Bullet bullet : Game.getBullets()) {
+			if(isHit(bullet.getShot()))	{
+				int damage = rand.nextInt(5-0) +1;
+				setHealth(getHealth() - damage);
+			}
+		}
+		
+	}
 	
 
 	

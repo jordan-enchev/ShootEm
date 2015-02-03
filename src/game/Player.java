@@ -21,7 +21,7 @@ public class Player {
     public  boolean goingLeft;
     public  boolean goingRight;
     
-    public static boolean headRight;
+    public static boolean headedRight;
     public static boolean hasShot;
 	
 	
@@ -36,7 +36,10 @@ public class Player {
 
 	public void tick()	{
 
-		
+		if(hasShot())	{
+			Game.setBullets(new Bullet());
+			setHasShot(false);
+		}
 		
 		if(isDead()){
 			Game.running = false;
@@ -74,7 +77,7 @@ public class Player {
 				else	{
 					goingLeft = false;
 				}	
-				headRight = true;
+				headedRight = true;
 				
 			}
 			if(goingRight)	{
@@ -85,7 +88,7 @@ public class Player {
 					else	{
 						goingRight = false;
 					}	
-					headRight = false;
+					headedRight = false;
 			}
 			
 			
@@ -190,12 +193,12 @@ public class Player {
 		this.health = health;
 	}
 	
-	public boolean isHeadRight() {		//returns true if headed right
-		return headRight;
+	public boolean isHeadedRight() {		//returns true if headed right
+		return headedRight;
 	}
 
 
-	public boolean isHasShot() {
+	public boolean hasShot() {
 		return hasShot;
 	}
 

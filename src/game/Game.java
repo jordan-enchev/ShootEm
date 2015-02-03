@@ -22,6 +22,7 @@ public class Game implements Runnable {
 	
 	public static Player player = null;
 	public static ArrayList<Enemy> enemies = null;	
+	public static ArrayList<Bullet> bullets = null;
 
 	public Game()	{
 		
@@ -52,8 +53,8 @@ public class Game implements Runnable {
 							else {
 								System.out.println("Player inited");
 								enemies = new ArrayList<Enemy>();
-								enemies.add(new Enemy(400, 450, 100));	
-								enemies.add(new Enemy(150, 480, 100));
+								bullets = new ArrayList<Bullet>();
+								enemies.add(new Enemy(400, 450, 10));	
 							}
 												
 						}
@@ -61,11 +62,16 @@ public class Game implements Runnable {
 		}
 		
 	}		
+	
+
 	private void tick() {  
 		player.tick();
 		player.changeAsset();
 		for (Enemy enemy : enemies) {
 			enemy.tick();
+		}
+		for (Bullet bullet : bullets) {
+			bullet.tick();
 		}
 		
 		
@@ -95,6 +101,9 @@ public class Game implements Runnable {
         player.render(g);
         for (Enemy enemy : enemies) {
 			enemy.render(g);
+		}
+        for (Bullet bullet : bullets) {
+			bullet.render(g);
 		}
        
         //End of drawing objects
@@ -189,6 +198,14 @@ public class Game implements Runnable {
             e.printStackTrace();
         }
     }
+    
+    public static void setBullets(Bullet bullet) {
+		bullets.add(bullet);
+	}
 
+	public static ArrayList<Bullet> getBullets() {
+		return bullets;
+	}
+    
 
 }
