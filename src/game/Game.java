@@ -56,7 +56,6 @@ public class Game implements Runnable {
 								bullets = new ArrayList<Bullet>();
 								enemies.add(new Enemy(400, 450, 10));	
 							}
-												
 						}
 			
 		}
@@ -65,12 +64,18 @@ public class Game implements Runnable {
 	
 
 	private void tick() {  
+		
+		if(enemies.isEmpty())	{
+			enemies.add(new Enemy(400, 450, 10));	
+		}
+		
 		player.tick();
 		player.changeAsset();
 		for (Enemy enemy : enemies) {
 			enemy.tick();
 		}
 		for (Bullet bullet : bullets) {
+				
 			bullet.tick();
 		}
 		
@@ -206,6 +211,7 @@ public class Game implements Runnable {
 	public static ArrayList<Bullet> getBullets() {
 		return bullets;
 	}
+
     
 
 }

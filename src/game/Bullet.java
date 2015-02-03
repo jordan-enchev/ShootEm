@@ -20,7 +20,7 @@ public class Bullet {
 					this.x = Game.player.getxPos();
 					this.y = Game.player.getyPos() + 75; 
 				}
-				shot = new Rectangle(this.x,this.y, 1, 1);
+				shot = new Rectangle(this.x,this.y, 2, 2 );
 				if(Game.player.isHeadedRight()){
 					vel = -1;
 				}
@@ -29,16 +29,18 @@ public class Bullet {
 				}
 				
 			}
-			
-			
-			public void tick()	{		
+ 			
+			public void tick()	{	
 				
+				shot.setBounds(this.x, this.y, 2, 2);
+				
+				if(inBounds())	{
 				this.setX(getX() + (vel)*CONSTANTS.VEL*2);
+				}
+								
 				
 				
-				
-				
-				if(!inBounds()){
+ 				if(!inBounds()){
 					try {
 						this.finalize();
 					} catch (Throwable e) {
@@ -54,7 +56,7 @@ public class Bullet {
 			}
 			
 			public boolean inBounds(){
-				if(x>0 && x <= CONSTANTS.GAME_WIDTH && y > 0 && y <= CONSTANTS.GAME_HEIGHT){
+				if(x > 0 && x < CONSTANTS.GAME_WIDTH && y > 0 && y < CONSTANTS.GAME_HEIGHT){
 					return true;
 				}
 				return false;
@@ -93,11 +95,4 @@ public class Bullet {
 				return shot;
 			}
 
-			public void setShot(Rectangle shot) {
-				this.shot = shot;
-			}
-			
-			
-	
-	
 }

@@ -33,32 +33,36 @@ public class Enemy {
 	
 	public void tick()	{
 		
-		boundingBox.setBounds(xPos, yPos, 40, 60);
-		this.loseHP();
-		
-		
-		if(!Intersects(Game.player.getBoundingBox()))	{
-			setDirection();		
-			changeAsset();
-		}
-		else	{
-			damage = rand.nextInt((5-1+1) + 1);
+		if(!isDead()){
+			boundingBox.setBounds(xPos, yPos, 40, 60);
 			
-			Game.player.loseHealth(damage);
-			changeAsset();
-		}
-		for (Enemy enemy : Game.enemies) {
-	
-			if (isDead()) {
-				try {
-					enemy.finalize();
-				} catch (Throwable e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			for (Bullet bullet : Game.bullets) {
+				
+				if(Intersects(bullet.getShot()))	{
+					loseHP();				
 				}
-			
 			}
+			
+			
+			if(!Intersects(Game.player.getBoundingBox ()))	{
+				setDirection();		
+				changeAsset();
+			}
+			else	{
+				dealDMG();
+				changeAsset();
+			}
+		
 		}	
+		
+		else	{
+			try {
+				this.finalize();
+			} catch (Throwable e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
 	}
 	
 	public void render(Graphics g) {
@@ -95,7 +99,7 @@ public class Enemy {
 	}
 	public void setDirection()	{
 		setxDirection(Game.player.getxPos());
-//		setyDirection(Game.player.getyPos());
+		setyDirection(Game.player.getyPos());
 	}
 	public void setxDirection(int x)	{
 		
@@ -111,11 +115,11 @@ public class Enemy {
 	}
 	public void setyDirection(int y)	{
 		
-		if (getyPos() <= y)	{	//down
+		if (getyPos() <= y + 60 )	{	//down
 			
 				setyPos(getyPos() + CONSTANTS.VEL/2);						
 		}
-		if (getyPos() > y)	{
+		if (getyPos() > y + 75)	{
 		
 				setyPos(getyPos() - CONSTANTS.VEL/2);
 		}
@@ -127,41 +131,25 @@ public class Enemy {
         }
         return false;
     }
-	
-	public boolean isHit(Rectangle shot)	{
-		
-		if(this.boundingBox.contains(shot))	{
-			return true;
-		}
-		return false;
-		
-	}
-			
+				
 	
 	public void loseHP()	{
-		for (Bullet bullet : Game.getBullets()) {
-			if(isHit(bullet.getShot()))	{
-				int damage = rand.nextInt(5-0) +1;
-				setHealth(getHealth() - damage);
-			}
-		}
 		
+		int damage = rand.nextInt(5-0) +1;
+		setHealth(getHealth() - damage);		
 	}
-	
+	public void dealDMG(){
+		damage = rand.nextInt((5-1+1) + 1);
+		Game.player.loseHealth(damage);
+	}
 
 	
 	public boolean isDead()	{
-		if(getHealth() == 0)	{
-			return true;
+		if(getHealth() <= 0)	{
+ 			return true;
 		}
 		return false;	
 	}
-
-	
-	
-	
-	
-	
 	
 	//	
 	//	
