@@ -56,6 +56,8 @@ public class Game implements Runnable {
 								enemies = new ArrayList<Enemy>();
 								bullets = new ArrayList<Bullet>();
 								enemies.add(new Enemy(400, 450, 50));	
+								enemies.add(new Enemy(500, 450, 50));	
+								enemies.add(new Enemy(450, 450, 50));	
 								this.xDis = 0;
 								this.xDisEnd = xDis + 800;
 								this.yDis = 0;

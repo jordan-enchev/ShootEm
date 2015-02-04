@@ -21,14 +21,14 @@ public class Bullet {
 					this.x = Game.player.getxPos();
 					this.y = Game.player.getyPos() + 75; 
 				}
-				shot = new Rectangle(this.x,this.y, 2, 2 );
+				this.shot = new Rectangle(this.x,this.y, 2, 2 );
 				if(Game.player.isHeadedRight()){
 					vel = -1;
 				}
 				else	{
 					vel = 1;
 				}
-				hasHit = false;
+				this.hasHit = false;
 				
 			}
  			
@@ -40,16 +40,7 @@ public class Bullet {
 				this.setX(getX() + (vel)*CONSTANTS.VEL*2);
 				}
 								
-				
-				
- 				if(!inBounds()){
-					try {
-						this.finalize();
-					} catch (Throwable e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
+
 
 			}
 			public void render(Graphics g)	{
@@ -63,6 +54,7 @@ public class Bullet {
 				}
 				return false;
 			}
+			
 			public void finalize()	{			//to graveyard
 					this.setX(0);
 					this.setY(610);

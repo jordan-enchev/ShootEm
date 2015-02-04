@@ -20,6 +20,7 @@ public class Enemy {
 	private Random rand;
 	private int damage = 0;
 	private int lastDir;
+	private boolean isHit = false;
 	
 		
 	public Enemy(int x, int y, int hp)	{
@@ -44,18 +45,15 @@ public class Enemy {
 					loseHP();	
 					bullet.setHasHit(true);
 				}
+					
 			}
-			
-			
-			if(!Intersects(Game.player.getBoundingBox ()))	{
+				if(!Intersects(Game.player.getBoundingBox ()))	{
 				setDirection();		
 				changeAsset();
 			}
 			else	{
 				dealDMG();
-				changeAsset();
 			}
-		
 		}		
 	}
 	
@@ -69,7 +67,19 @@ public class Enemy {
 		
 		Rectangle newCrop = Assets.getOtherCrop();
 			
-		if(!Intersects(Game.player.getBoundingBox()))	{
+				if(isHit()) {
+				newCrop.x = 370;
+				if(newCrop.x + 40 <= 410)	{
+					newCrop.x += 40;
+					setIsHit(false);
+				}
+				else {
+					newCrop.x = 370;
+				}
+				Assets.setOtherCrop(newCrop);
+			} 
+			
+				else if(!Intersects(Game.player.getBoundingBox()))	{
 			newCrop.y = 10;
 			if(newCrop.x + 40 < 360)	{
 				newCrop.x += 40;
@@ -77,19 +87,12 @@ public class Enemy {
 			else {
 				newCrop.x = 40;
 			}
+			Assets.setOtherCrop(newCrop);	
 		}
-//		else {
-//			if(newCrop.x + 40 < 361)	{
-//				newCrop.x += 40;
-//			}
-//			else {
-//				newCrop.x = 320;
-//			}
-//			
-//		}
-			
-			
-			Assets.setOtherCrop(newCrop);
+		
+		
+		
+
 	}
 	public void setDirection()	{
 		setxDirection(Game.player.getxPos());
@@ -131,6 +134,7 @@ public class Enemy {
 		
 		int damage = rand.nextInt(5-0) +1;
 		setHealth(getHealth() - damage);		
+		setIsHit(true);
 	}
 	public void dealDMG(){
 		damage = rand.nextInt((5-1+1) + 1);
@@ -196,6 +200,18 @@ public class Enemy {
 
 	public Rectangle getBoundingBox() {
 		return boundingBox;
+	}
+
+
+
+	public boolean isHit() {
+		return isHit;
+	}
+
+
+
+	public void setIsHit(boolean isHit) {
+		this.isHit = isHit;
 	}
 
 
