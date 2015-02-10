@@ -24,12 +24,12 @@ public class Enemy {
 	
 		
 	public Enemy(int x, int y, int hp)	{
-		this.xPos = x;
-		this.yPos = y;
-		this.health = hp;	
-		this.img = Assets.enemy;
-		this.boundingBox = new Rectangle(40, 60);
-		this.rand = new Random();
+		xPos = x;
+		yPos = y;
+		health = hp;	
+		img = Assets.enemy;
+		boundingBox = new Rectangle(40, 60);
+		rand = new Random();
 	}
 	
 	
@@ -37,17 +37,10 @@ public class Enemy {
 	public void tick()	{
 		
 		if(!isDead()){
-			boundingBox.setBounds(xPos, yPos, 40, 60);
-			
-			for (Bullet bullet : Game.bullets) {
-				
-				if(Intersects(bullet.getShot()))	{
-					loseHP();	
-					bullet.setHasHit(true);
-				}
-					
-			}
-				if(!Intersects(Game.player.getBoundingBox ()))	{
+			boundingBox.setBounds(xPos, yPos, 80, 100);
+		
+		
+			if(!Intersects(Game.player.getBoundingBox ()))	{
 				setDirection();		
 				changeAsset();
 			}
@@ -59,36 +52,37 @@ public class Enemy {
 	
 	public void render(Graphics g) {
 			
-		g.drawImage(Assets.enemy, this.xPos, this.yPos, (lastDir)*40, 60, null);
+		g.drawImage(Assets.enemy, xPos, yPos, (lastDir)*80, 100, null);
 	
-		}
+	}
 	
 	public void changeAsset()	{
 		
-		Rectangle newCrop = Assets.getOtherCrop();
+		Rectangle newCrop = Assets.getEnemyCrop();
 			
 				if(isHit()) {
-				newCrop.x = 370;
-				if(newCrop.x + 40 <= 410)	{
-					newCrop.x += 40;
-					setIsHit(false);
+					newCrop.x = 370;
+					if(newCrop.x + 40 <= 410)	{
+						newCrop.x += 40;
+						setIsHit(false);
 				}
 				else {
 					newCrop.x = 370;
 				}
-				Assets.setOtherCrop(newCrop);
+				Assets.setEnemyCrop(newCrop);
 			} 
 			
-				else if(!Intersects(Game.player.getBoundingBox()))	{
-			newCrop.y = 10;
-			if(newCrop.x + 40 < 360)	{
-				newCrop.x += 40;
+			else if(!Intersects(Game.player.getBoundingBox()))	{
+				
+				newCrop.y = 10;
+				if(newCrop.x + 40 < 360)	{
+					newCrop.x += 40;
+				}
+				else {
+					newCrop.x = 40;
+				}
+				Assets.setEnemyCrop(newCrop);	
 			}
-			else {
-				newCrop.x = 40;
-			}
-			Assets.setOtherCrop(newCrop);	
-		}
 		
 		
 		
@@ -101,22 +95,22 @@ public class Enemy {
 	public void setxDirection(int x)	{
 		
 		if (getxPos() <= x)	{	//left direction
-			setxPos(getxPos() + CONSTANTS.VEL/2);
+			setxPos(getxPos() + CONSTANTS.VEL/3);
 			lastDir = -1;
 		}
 		if(getxPos() > x)	{	
 				
-			setxPos(getxPos() - CONSTANTS.VEL/2);	
+			setxPos(getxPos() - CONSTANTS.VEL/3);	
 			lastDir = 1;
 		}
 	}
 	public void setyDirection(int y)	{
 		
-		if (getyPos() <= y + 60 )	{	//down
+		if (getyPos() <= y + 40 )	{	//down
 			
 				setyPos(getyPos() + CONSTANTS.VEL/2);						
 		}
-		if (getyPos() > y + 75)	{
+		if (getyPos() > y + 40)	{
 		
 				setyPos(getyPos() - CONSTANTS.VEL/2);
 		}
@@ -128,8 +122,7 @@ public class Enemy {
         }
         return false;
     }
-				
-	
+
 	public void loseHP()	{
 		
 		int damage = rand.nextInt(5-0) +1;
@@ -140,8 +133,6 @@ public class Enemy {
 		damage = rand.nextInt((5-1+1) + 1);
 		Game.player.loseHealth(damage);
 	}
-
-	
 	public boolean isDead()	{
 		if(getHealth() <= 0)	{
  			return true;
@@ -149,9 +140,10 @@ public class Enemy {
 		return false;	
 	}
 	public void finalize()	{
-		this.setxPos(0);
-		this.setyPos(610);
-		this.boundingBox.setBounds(this.getxPos(), this.getyPos(), 1, 1);
+		setxPos(0);
+		setyPos(610);
+		setBoundingBox(null);
+		img = null;
 	}
 	
 	//	
@@ -172,50 +164,36 @@ public class Enemy {
 		return health;
 	}
 
-
-
 	public int getxPos() {
 		return xPos;
 	}
-
-
 
 	public void setxPos(int xPos) {
 		this.xPos = xPos;
 	}
 
-
-
 	public int getyPos() {
 		return yPos;
 	}
-
-
 
 	public void setyPos(int yPos) {
 		this.yPos = yPos;
 	}
 
-
-
 	public Rectangle getBoundingBox() {
 		return boundingBox;
 	}
 
-
+	public void setBoundingBox(Rectangle boundingBox) {
+		this.boundingBox = boundingBox;
+	}
 
 	public boolean isHit() {
 		return isHit;
 	}
 
-
-
 	public void setIsHit(boolean isHit) {
 		this.isHit = isHit;
 	}
-
-
-
-	
 
 }

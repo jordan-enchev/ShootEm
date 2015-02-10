@@ -6,7 +6,9 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
+import java.util.Random;
 
+import Display.Background;
 import Display.Display;
 import constants.CONSTANTS;
 
@@ -16,12 +18,14 @@ public class Game implements Runnable {
 	private Graphics g = null;
 	private BufferStrategy bs = null;
 	private Input iHandler = null;
-	private int xDis, yDis, xDisEnd, yDisEnd;
+	private Random rand = new Random();
+	
 		
 		
 	public static boolean running = false;
 	private Thread thread;
 	
+	public static Background background = null;
 	public static Player player = null;
 	public static ArrayList<Enemy> enemies = null;	
 	public static ArrayList<Bullet> bullets = null;
@@ -36,35 +40,35 @@ public class Game implements Runnable {
 		}
 		else	{
 			System.out.println("Display inited");
+			
 			Assets.init();
-			
-				 
-				System.out.println("Background image inited");
-					iHandler = new Input(this.display);
-						if(iHandler == null){
-							System.out.println("Failed to init iHandler");
-							}
-						else	{
-							System.out.println("iHandler inited");
-							player = new Player();
-							if (player == null) {
-								System.out.println("Failed to init player");
-								
-							}
-							else {
-								System.out.println("Player inited");
-								enemies = new ArrayList<Enemy>();
-								bullets = new ArrayList<Bullet>();
-								enemies.add(new Enemy(400, 450, 50));	
-								enemies.add(new Enemy(500, 450, 50));	
-								enemies.add(new Enemy(450, 450, 50));	
-								this.xDis = 0;
-								this.xDisEnd = xDis + 800;
-								this.yDis = 0;
-								this.yDisEnd = yDis + 600;
-							}
-						}
-			
+			background = new Background();
+			if(background == null)	{
+				System.out.println("Failed to init backgroud");
+			}
+			else	{
+				System.out.println("Background inited");
+				iHandler = new Input(this.display);	
+				if(iHandler == null){
+					System.out.println("Failed to init iHandler");
+					}
+				else	{
+					System.out.println("iHandler inited");
+					player = new Player();
+					if (player == null) {
+						System.out.println("Failed to init player");
+						
+					}
+					else {
+						System.out.println("Player inited");
+						enemies = new ArrayList<Enemy>();
+						bullets = new ArrayList<Bullet>();
+						enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
+//						enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
+//						enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
+					}
+				}
+			}
 		}
 		
 	}		
@@ -74,65 +78,100 @@ public class Game implements Runnable {
 		
 			
 		player.tick();
+			if(player.hasShot){
+				shoot(new Bullet(player.getxPos(), player.getyPos(), player.getDir()));
+				player.hasShot = false;
+			}
+			if(player.getHealth() <= 0){
+				running = false;
+			}
 		player.changeAsset();
-		for (Enemy enemy : enemies) {
+		
+		if(player.getxPos() < 110)	{
+			player.setxPos(110);
+			background.moveRight();
+		}
+		if(player.getxPos() > 600)	{
+			player.setxPos(600);
+			background.moveLeft();
+		}
+		
+		
+		
+		
+		int e = enemies.size();
+		while(e-- > 0){
+			Enemy enemy = enemies.get(e);
 			if(enemy.isDead())	{	
+				enemies.remove(enemy);
 				enemy.finalize();
 			}
-			enemy.tick();
-		}
-		for (Bullet bullet : bullets) {
-			if(!bullet.inBounds() || bullet.hasHit())	{
-				bullet.finalize();
+			else	{
+				if(background.dir == 1)	{
+	        		enemy.setxPos(enemy.getxPos() + CONSTANTS.VEL);
+	        		background.dir = 0;
+	        	}
+	        	if(background.dir == -1)	{
+	        		enemy.setxPos(enemy.getxPos() - CONSTANTS.VEL);
+	        		background.dir = 0;
+	        	}
+				enemy.tick();
+				
 			}
-			else
-			bullet.tick();
+		}
+		
+		
+		
+		int l = bullets.size();
+		while(l-- > 0){
+			Bullet bullet = bullets.get(l);
+			if(!bullet.inBounds() || bullet.hasHit())	{
+				bullets.remove(bullet);
+   				bullet.finalize();
+			}
+			else	{
+				bullet.tick();
+			}
 		}
 		
 		
      }
 	
-    //The method that will draw everything on the canvas
+
     private void render() {
-        //Setting the bufferStrategy to be the one used in our canvas
-        //Gets the number of buffers that the canvas should use.
-        this.bs = display.getgFrame().getBufferStrategy();
-        //If our bufferStrategy doesn't know how many buffers to use
-        //we create some manually
+     
+        bs = display.getgFrame().getBufferStrategy();
         if (bs == null) {
-            //Create 2 buffers
             display.getgFrame().createBufferStrategy(2);
-            //returns out of the method to prevent errors
             return;
         }
-        //Instantiates the graphics related to the bufferStrategy
+        
+       
         g = bs.getDrawGraphics();
-        //Clear the screen at every frame
         g.clearRect(0, 0, CONSTANTS.WINDOW_WIDTH, CONSTANTS.WINDOW_HEIGHT);
-        //Beginning of drawing things on the screen
-        
-//        if(player.getxPos() > CONSTANTS.WINDOW_WIDTH / 2 && player.isMoving())	{
-//        	g.drawImage(Assets.background, xDis -= CONSTANTS.VEL, yDis, xDisEnd -= CONSTANTS.VEL, yDisEnd, null);
-//        }
-//        else if(player.getxPos() < CONSTANTS.WINDOW_WIDTH / 2 && player.isMoving())	{
-//        	g.drawImage(Assets.background, xDis += CONSTANTS.VEL, yDis, xDisEnd += CONSTANTS.VEL, yDisEnd, null);
-//        }
-//        else
-        	g.drawImage(Assets.background, xDis, yDis, xDisEnd, yDisEnd, null);
-        
-        
-        for (Enemy enemy : enemies) {
-			enemy.render(g);
-		}
-        for (Bullet bullet : bullets) {
-			bullet.render(g);
-		}
-        player.render(g);
-        //End of drawing objects
 
-        //Enables the buffer
+        background.draw(g);
+
+        for (Enemy enemy : enemies) {
+        	       	
+        	if(!enemy.isDead())
+        	{
+        		enemy.render(g);
+        	}
+		}
+        
+        
+        for (Bullet bullet : bullets) {
+        	if(bullet.inBounds() || !bullet.hasHit())	{
+        		bullet.render(g);
+        	}
+        		
+		}
+        
+        
+        player.render(g);
+
         bs.show();
-        //Shows everything stored in the Graphics object
         g.dispose();
     }
 
@@ -156,7 +195,6 @@ public class Game implements Runnable {
         int ticks = 0;
 
         while (running) {
-            //Sets the now variable to the current time in nanoseconds
             now = System.nanoTime();
             //Amount of time passed divided by the max amount of time allowed.
             delta += (now-lastTime) / timePerTick;
@@ -180,40 +218,26 @@ public class Game implements Runnable {
             }
         }
 
-        //Calls the stop method to ensure everything has been stopped
-        stop();      //Setting the while
+       
+        stop();     
     }
 
-    //Creating a start method for the Thread to start our game
-    //Synchronized is used because our method is working with threads
-    //so we ensure ourselves that nothing will go bad
     public synchronized void start() {
-        //If the game is running exit the method
-        //This is done in order to prevent the game to initialize
-        //more than enough threads
+        
         if(running) {
             return;
         }
-        //Setting the while-game-loop to run
         running = true;
-        //Initialize the thread that will work with "this" class (game.Game)
         thread = new Thread(this);
-        //The start method will call start the new thread and it will call
-        //the run method in our class
         thread.start();
     }
 
-    //Creating a stop method for the Thread to stop our game
+ 
     public synchronized void stop() {
-        //If the game is not running exit the method
-        //This is done to prevent the game from stopping a
-        //non-existing thread and cause errors
         if(!running) {
             return;
         }
         running = false;
-        //The join method stops the current method from executing and it
-        //must be surrounded in try-catch in order to work
         try {
             thread.join();
         } catch (InterruptedException e) {
@@ -221,7 +245,7 @@ public class Game implements Runnable {
         }
     }
     
-    public static void setBullets(Bullet bullet) {
+    public static void shoot(Bullet bullet) {
 		bullets.add(bullet);
 	}
 

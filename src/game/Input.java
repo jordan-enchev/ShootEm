@@ -28,7 +28,7 @@ public class Input implements KeyListener {
             Game.player.goingRight = true;
         }
         if (keyCode == KeyEvent.VK_SPACE){
-        	Game.player.setHasShot(true);
+        	Game.player.hasShot = true;
         }
         if (keyCode == KeyEvent.VK_ESCAPE) {
             System.exit(0);

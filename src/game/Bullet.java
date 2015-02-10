@@ -3,50 +3,56 @@ package game;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 
 import constants.CONSTANTS;
 
 public class Bullet {
 
-			private Rectangle shot;
-			private int x, y, vel;
-			private boolean hasHit;
+			private Rectangle boundingBox;											//checks for collision
+			private int x, y, dir;											//	bullet current position and direction (1 - right, -1 - left)
+			private boolean hasHit;											//	returnrs true on impact
+			BufferedImage img;												
 			
-			public Bullet()	{
-				if(Game.player.isHeadedRight())	{
-					this.x = Game.player.getxPos() + 90;
-					this.y = Game.player.getyPos() + 75; 
+			public Bullet(int x, int y, int dir)	{
+				
+				if(dir < 0)	{
+					this.x = x + 90;							 //initial bullet position with player x,y with image size corrections;
+					this.y = y + 75; 
+					this.dir = dir;
 				}
-				else	{
-					this.x = Game.player.getxPos();
-					this.y = Game.player.getyPos() + 75; 
+				if(dir > 0)	{
+					this.x = x;
+					this.y = y + 75; 
+					this.dir = dir;
 				}
-				this.shot = new Rectangle(this.x,this.y, 2, 2 );
-				if(Game.player.isHeadedRight()){
-					vel = -1;
-				}
-				else	{
-					vel = 1;
-				}
-				this.hasHit = false;
+				
+				boundingBox = new Rectangle(this.x,this.y, 2, 2 );
+				hasHit = false;
 				
 			}
  			
 			public void tick()	{	
 				
-				shot.setBounds(this.x, this.y, 2, 2);
-				
+				boundingBox.setBounds(x, y, 2, 2);
 				if(inBounds())	{
-				this.setX(getX() + (vel)*CONSTANTS.VEL*2);
+				x += (dir)*CONSTANTS.VEL*2;
 				}
-								
-
-
+				for (Enemy enemy : Game.enemies) {
+					
+					if(Intersects(enemy.getBoundingBox()))	{
+						enemy.loseHP();	
+						hasHit = true;
+					}
+						
+				}
 			}
+			
 			public void render(Graphics g)	{
 				g.setColor(Color.green);
-				g.fillRect(getX(), getY(), 10, 10);
+				g.fillRect(x, y, 10, 10);
 			}
+			
 			
 			public boolean inBounds(){
 				if(x >= 0 && x <= CONSTANTS.GAME_WIDTH && y >= 0 && y <= CONSTANTS.GAME_HEIGHT){
@@ -55,11 +61,21 @@ public class Bullet {
 				return false;
 			}
 			
-			public void finalize()	{			//to graveyard
-					this.setX(0);
-					this.setY(610);
-					this.setShot(new Rectangle(this.getX(), this.getY(), 1, 1));
-			}
+			public boolean Intersects(Rectangle r) {
+		        if(this.boundingBox.contains(r) || r.contains(this.boundingBox)) {
+		            return true;
+		        }
+		        return false;
+		    }
+			
+			
+			public void finalize()	{			
+					x = 0;
+					y = 610;
+					setShot(null);
+					}
+
+
 			
 		//	
 		//	
@@ -73,24 +89,24 @@ public class Bullet {
 			
 			
 			
-			public int getX() {
+			public int getxPos() {
 				return x;
 			}
 
-			public void setX(int x) {
+			public int getyPos() {
+				return y;
+			}
+			
+			public void setxPos(int x) {
 				this.x = x;
 			}
 
-			public int getY() {
-				return y;
-			}
-
-			public void setY(int y) {
+			public void setyPos(int y) {
 				this.y = y;
 			}
 
 			public Rectangle getShot() {
-				return shot;
+				return boundingBox;
 			}
 
 			public boolean hasHit() {
@@ -102,8 +118,10 @@ public class Bullet {
 			}
 
 			public void setShot(Rectangle shot) {
-				this.shot = shot;
+				this.boundingBox = shot;
 			}
+
+			
 			
 
 }

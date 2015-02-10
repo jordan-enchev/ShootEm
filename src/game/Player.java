@@ -7,120 +7,105 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import Display.Background;
 import constants.CONSTANTS;
 
 public class Player {
 	private int health, ammo;
 	private BufferedImage img;
-	private int xPos, yPos;
+	private int xPos, yPos, dir;
 	private Rectangle boundingBox;
 	private Random rand;
+	
+	private final int startPos = 400;
+	private final int safeArea = 200;
+	
+	public static boolean hasShot;
 	
 	public  boolean goingUp;
     public  boolean goingDown;
     public  boolean goingLeft;
     public  boolean goingRight;
     
-    public static boolean headedRight;
-    public static boolean hasShot;
-	
 	
 	public Player()	{
-		this.health = 100;
-		//this.ammo = 30;	
-		this.img = Assets.player;
-		xPos = 0;
+		health = 100;
+		//ammo = 30;	
+		img = Assets.player;
+		xPos = startPos;
 		yPos = 400;
-		this.boundingBox = new Rectangle(100,150);
+		boundingBox = new Rectangle(100,150);
 	}
 
 	public void tick()	{
 
-		if(hasShot())	{
-			Game.setBullets(new Bullet());
-			setHasShot(false);
-		}
 		
-		if(isDead()){
-			Game.running = false;
-			System.out.println("You died!!!");
-		}
-
 		boundingBox.setBounds(xPos, yPos, 100, 150);
-			
-
-		
+	
 			if(goingDown)	{
 				
-					if(getyPos() < CONSTANTS.GAME_HEIGHT - 180)	{
-						setyPos(yPos + CONSTANTS.VEL);
-					}
-					else	{
-						goingDown = false;
-					}	
+				if(getyPos() < CONSTANTS.GAME_HEIGHT - 150)	{		//player image heigth = 150
+					setyPos(yPos + CONSTANTS.VEL);
+				}
+				else	{
+					goingDown = false;
+				}	
 			}
 			if(goingUp)	{
 				if(getyPos() > 360)	{
-					
-						setyPos(yPos - CONSTANTS.VEL);
-					}
+					setyPos(yPos - CONSTANTS.VEL);
+				}
 				else	{
 					goingUp = false;
 				}
-	
 			}
 			if(goingLeft)	{
 			
-				if(getxPos()  > 0 )	{
+				if(getxPos()  >= startPos-safeArea-90 )	{
 					setxPos(xPos - CONSTANTS.VEL);
 				}
-				else	{
-					goingLeft = false;
-				}	
-				headedRight = true;
-				
+				dir = -1;		
 			}
 			if(goingRight)	{
 	
-					if(getxPos() < CONSTANTS.GAME_WIDTH - 90)	{
-						setxPos(xPos + CONSTANTS.VEL);
-					}
-					else	{
-						goingRight = false;
-					}	
-					headedRight = false;
+				if(getxPos() <= startPos+safeArea)	{
+					setxPos(xPos + CONSTANTS.VEL);
+				}
+				dir = 1;
+				
 			}
 			
 			
-		}
+	}
 		
 	public boolean isMoving()	{
 		return (goingDown || goingLeft || goingRight || goingUp);
 	}
+
 	
 	public void changeAsset()	{
 		
-				Rectangle newCrop = Assets.getCropPoint();
-				if	(goingRight){
+				Rectangle newCrop = Assets.getPlayerCrop();
+				if	(goingRight)	{
 					newCrop.y = 35;
 					if(newCrop.x + 200 < 800)	{
 						newCrop.x += 200;
 					}
-				else {
-					newCrop.x = 55;
-				}
-					Assets.setCropPoint(newCrop);
+					else {
+						newCrop.x = 55;
+					}
+					Assets.setPlayerCrop(newCrop);
 				}
 				
-				if(goingLeft){
+				else if(goingLeft){
 					newCrop.y = 235;
 					if(newCrop.x + 200 < 800)	{
 						newCrop.x += 200;
 					}
-				else {
-					newCrop.x = 55;
-				}
-					Assets.setCropPoint(newCrop);
+					else {
+						newCrop.x = 55;
+					}
+					Assets.setPlayerCrop(newCrop);
 					
 				}
 		
@@ -136,7 +121,7 @@ public class Player {
 	public void loseHealth(int damage)
 	{	
 		if(ifHit())	{
-		setHealth(getHealth()-damage);
+		health -= damage;
 		System.out.println("Damage taken " + damage);
 		System.out.println("Health left " + getHealth());
 		}
@@ -145,19 +130,13 @@ public class Player {
 	public boolean ifHit()	{
 		rand = new Random();
 		int hit = rand.nextInt(1-0+1);
+		
 		if(hit == 1)	{
 			return true;
 		}
 		return false;
 		
 	}
-	public boolean isDead()	{
-		if (getHealth() <= 0){
-			return true;
-		}
-		return false;
-	}
-
 	
 //	
 //	
@@ -183,6 +162,15 @@ public class Player {
 	public void setyPos(int yPos) {
 		this.yPos = yPos;
 	}
+	
+
+	public int getDir() {
+		return dir;
+	}
+
+	public void setDir(int dir) {
+		this.dir = dir;
+	}
 
 	public Rectangle getBoundingBox() {
 		return boundingBox;
@@ -196,18 +184,5 @@ public class Player {
 		this.health = health;
 	}
 	
-	public boolean isHeadedRight() {		//returns true if headed right
-		return headedRight;
-	}
-
-
-	public boolean hasShot() {
-		return hasShot;
-	}
-
-	public void setHasShot(boolean hasShot) {
-		Player.hasShot = hasShot;
-	}
-
 
 }
