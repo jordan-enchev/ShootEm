@@ -4,14 +4,12 @@ import gfx.Assets;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import constants.CONSTANTS;
 
 public class Enemy {
 
-	private BufferedImage img;
 	private int xPos, yPos, dir, health;
 	private Rectangle collisionBox;
 	
@@ -25,7 +23,6 @@ public class Enemy {
 		yPos = y;
 		dir = 0;
 		health = hp;	
-		img = Assets.enemy;
 		collisionBox = new Rectangle(80, 100);
 		rand = new Random();
 	}
@@ -45,38 +42,33 @@ public class Enemy {
 	public void changeAsset()	{
 		
 		Rectangle newCrop = Assets.getEnemyCrop();
-			
-				if(gotHit()) {
-					newCrop.x = 370;
-					if(newCrop.x + 40 <= 410)	{
-						newCrop.x += 40;
-						gotHit(false);
-				}
-				else {
-					newCrop.x = 370;
-				}
-				Assets.setEnemyCrop(newCrop);
-			} 
-			
-			else if(!intersects(Game.player.getCollisionBox()))	{
-				
-				newCrop.y = 10;
-				if(newCrop.x + 40 < 360)	{
-					newCrop.x += 40;
-				}
-				else {
-					newCrop.x = 40;
-				}
-				Assets.setEnemyCrop(newCrop);	
-			}
-		
-		
-		
 
+		if(!intersects(Game.getPlayer().getCollisionBox()))	{
+			
+			newCrop.y = 10;
+			
+			if(newCrop.x + 40 < 360)	{
+				newCrop.x += 40;
+			}
+			else {
+				newCrop.x = 40;
+			}
+		}
+		
+		else	{
+			if(newCrop.x + 40 <= 410)	{
+				newCrop.x += 40;
+			}
+			else {
+				newCrop.x = 370;
+			}
+		} 
+		Assets.setEnemyCrop(newCrop);
 	}
-	public void setDirection()	{
-		setxDirection(Game.player.getxPos());
-		setyDirection(Game.player.getyPos());
+	
+	public void setDirection(int x, int y)	{
+		setxDirection(x);
+		setyDirection(y);
 	}
 	public void setxDirection(int x)	{
 		
@@ -121,7 +113,7 @@ public class Enemy {
 	
 	public void dealDMG(){
 		damage = rand.nextInt((5-1+1) + 1);
-		Game.player.loseHealth(damage);
+		Game.getPlayer().loseHealth(damage);
 	}
 	
 	public boolean isDead()	{
@@ -134,7 +126,6 @@ public class Enemy {
 		setxPos(0);
 		setyPos(610);
 		setCollisionBox(null);
-		img = null;
 	}
 	
 	//	

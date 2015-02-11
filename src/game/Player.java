@@ -4,14 +4,12 @@ import gfx.Assets;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import constants.CONSTANTS;
 
 public class Player {
 	private int health;
-	private BufferedImage img;
 	private int xPos, yPos, dir;
 	private Rectangle collisionBox;
 	private Random rand;
@@ -29,7 +27,6 @@ public class Player {
 	
 	public Player()	{
 		health = 100;	
-		img = Assets.player;
 		xPos = startPos;
 		yPos = 400;
 		collisionBox = new Rectangle(150,150);
@@ -41,8 +38,7 @@ public class Player {
 		collisionBox.setBounds(xPos, yPos, 150, 150);
 	
 			if(goingDown)	{
-				
-				if(getyPos() < CONSTANTS.GAME_HEIGHT - 150)	{		//player image heigth = 150
+				if(getyPos() < CONSTANTS.GAME_HEIGHT - 150)	{
 					setyPos(yPos + CONSTANTS.VEL);
 				}
 				else	{
@@ -58,22 +54,17 @@ public class Player {
 				}
 			}
 			if(goingLeft)	{
-			
 				if(getxPos()  >= startPos-safeArea-90 )	{
 					setxPos(xPos - CONSTANTS.VEL);
 				}
 				dir = -1;		
 			}
 			if(goingRight)	{
-	
 				if(getxPos() <= startPos+safeArea)	{
 					setxPos(xPos + CONSTANTS.VEL);
 				}
 				dir = 1;
-				
-			}
-			
-			
+			}	
 	}
 		
 	public boolean isMoving()	{
@@ -94,8 +85,7 @@ public class Player {
 					}
 					Assets.setPlayerCrop(newCrop);
 				}
-				
-				else if(goingLeft){
+				else if(goingLeft)	{
 					newCrop.y = 235;
 					if(newCrop.x + 200 < 800)	{
 						newCrop.x += 200;
@@ -104,9 +94,7 @@ public class Player {
 						newCrop.x = 55;
 					}
 					Assets.setPlayerCrop(newCrop);
-					
 				}
-		
 	}
 	
 	

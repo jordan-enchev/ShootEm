@@ -1,9 +1,9 @@
 package game;
 
-import java.awt.Color;
+import gfx.Assets;
+
 import java.awt.Graphics;
 import java.awt.Rectangle;
-import java.awt.image.BufferedImage;
 
 import constants.CONSTANTS;
 
@@ -11,8 +11,7 @@ public class Bullet {
 
 			private Rectangle collisionBox;											//checks for collision
 			private int x, y, dir;											//	bullet current position and direction (1 - right, -1 - left)
-			private boolean hasHit;											//	returnrs true on impact
-			BufferedImage img;												
+			private boolean hasHit;											//	returnrs true on impact								
 			
 			public Bullet(int x, int y, int dir)	{
 				
@@ -26,7 +25,6 @@ public class Bullet {
 					this.y = y + 75; 
 					this.dir = dir;
 				}
-				
 				collisionBox = new Rectangle(this.x,this.y, 2, 2 );
 				hasHit = false;
 				
@@ -37,13 +35,12 @@ public class Bullet {
 				collisionBox.setBounds(x, y, 2, 2);
 				
 				if(inBounds())	{
-				x += (dir)*CONSTANTS.VEL*2;
+				x += (dir)*CONSTANTS.VEL*3;
 				}
 			}
 			
 			public void render(Graphics g)	{
-				g.setColor(Color.green);
-				g.fillRect(x, y, 10, 10);
+				g.drawImage(Assets.bullet, x, y, (dir)*60, 30, null);
 			}
 			
 			
@@ -60,8 +57,6 @@ public class Bullet {
 		        }
 		        return false;
 		    }
-			
-			
 			public void finalize()	{			
 					x = 0;
 					y = 610;

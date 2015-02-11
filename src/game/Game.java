@@ -16,6 +16,7 @@ public class Game implements Runnable {
 	private Display display = null;
 	private Graphics g = null;
 	private BufferStrategy bs = null;
+	@SuppressWarnings("unused")
 	private Input iHandler = null;
 	private Random rand = new Random();
 	private boolean running = false;
@@ -26,7 +27,7 @@ public class Game implements Runnable {
 	private ArrayList<Enemy> enemies = null;	
 	private ArrayList<Bullet> bullets = null;
 	
-	public static Player player = null;
+	private static Player player = null;
 
 
 	public Game()	{
@@ -82,8 +83,8 @@ public class Game implements Runnable {
 		while(e-- > 0){
 			Enemy enemy = enemies.get(e);
 			if(enemy.isDead())	{	
-				enemies.remove(enemy);
 				enemy.finalize();
+				enemies.remove(enemy);
 			}
 			else	{
 				if(background.getDir() == 1)	{
@@ -99,9 +100,10 @@ public class Game implements Runnable {
 				
 				if(enemy.intersects(player.getCollisionBox ()))	{
 					enemy.dealDMG();
+					enemy.changeAsset();
 				}
 				else	{
-					enemy.setDirection();		
+					enemy.setDirection(player.getxPos(), player.getyPos());		
 					enemy.changeAsset();
 				}
 			}
@@ -113,8 +115,10 @@ public class Game implements Runnable {
 		while(l-- > 0){
 			Bullet bullet = bullets.get(l);
 			if(!bullet.inBounds() || bullet.hasHit())	{
+				
+				bullet.finalize();
 				bullets.remove(bullet);
-   				bullet.finalize();
+   				
 			}
 			else	{
 				bullet.tick();
@@ -152,11 +156,8 @@ public class Game implements Runnable {
         for (Bullet bullet : bullets) {
         	if(bullet.inBounds() || !bullet.hasHit())	{
         		bullet.render(g);
-        	}
-        		
+        	}		
 		}
-        
-        
         player.render(g);
 
         bs.show();
@@ -180,7 +181,8 @@ public class Game implements Runnable {
         //Returns the amount of time in nanoseconds that our computer runs.
         long lastTime = System.nanoTime();
         long timer = 0;
-        int ticks = 0;
+        @SuppressWarnings("unused")
+		int ticks = 0;
 
         while (running) {
             now = System.nanoTime();
@@ -243,6 +245,11 @@ public class Game implements Runnable {
 	public void genEnemy()	{
 		enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
 	}
+
+	public static Player getPlayer() {
+		return player;
+	}
+
     
 
 }
