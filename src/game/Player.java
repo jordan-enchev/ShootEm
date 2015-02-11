@@ -7,7 +7,6 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import Display.Background;
 import constants.CONSTANTS;
 
 public class Player {

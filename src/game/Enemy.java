@@ -5,8 +5,6 @@ import gfx.Assets;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Random;
 
 import constants.CONSTANTS;
@@ -28,7 +26,7 @@ public class Enemy {
 		dir = 0;
 		health = hp;	
 		img = Assets.enemy;
-		collisionBox = new Rectangle(100, 100);
+		collisionBox = new Rectangle(80, 100);
 		rand = new Random();
 	}
 	
@@ -36,12 +34,12 @@ public class Enemy {
 	
 	public void tick()	{
 		if(!isDead()){
-			collisionBox.setBounds(xPos, yPos, 100, 100);
+			collisionBox.setBounds(xPos, yPos, 80, 100);
 		}		
 	}
 	
 	public void render(Graphics g) {
-		g.drawImage(Assets.enemy, xPos, yPos, (dir)*100, 100, null);
+		g.drawImage(Assets.enemy, xPos, yPos, (dir)*80, 100, null);
 	}
 	
 	public void changeAsset()	{

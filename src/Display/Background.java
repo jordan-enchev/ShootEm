@@ -1,6 +1,5 @@
 package Display;
 
-import game.Game;
 import gfx.Assets;
 
 import java.awt.Graphics;
