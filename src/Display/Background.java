@@ -11,7 +11,7 @@ import constants.CONSTANTS;
 public class Background {
 	private int x, _x, y, _y;
 	private BufferedImage image;
-	public int dir;
+	private int dir;
 	
 	public Background()
 	{
@@ -39,6 +39,8 @@ public class Background {
 			_x -= CONSTANTS.VEL;
 			dir = -1;
 		}
+		else
+			dir = 0;
 				
 	}
 	public void moveRight()	{
@@ -47,6 +49,8 @@ public class Background {
 			_x += CONSTANTS.VEL;
 			dir = 1;
 		}
+		else
+			dir = 0;
 	}
 	
 	
@@ -61,6 +65,14 @@ public class Background {
 
 	public int getY() {
 		return y;
+	}
+
+	public int getDir() {
+		return dir;
+	}
+
+	public void setDir(int dir) {
+		this.dir = dir;
 	}
 	
 }

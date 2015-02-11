@@ -14,57 +14,45 @@ import constants.CONSTANTS;
 public class Enemy {
 
 	private BufferedImage img;
-	private int xPos, yPos, health;
-	private Rectangle boundingBox;
+	private int xPos, yPos, dir, health;
+	private Rectangle collisionBox;
 	
 	private Random rand;
 	private int damage = 0;
-	private int lastDir;
 	private boolean isHit = false;
 	
 		
 	public Enemy(int x, int y, int hp)	{
 		xPos = x;
 		yPos = y;
+		dir = 0;
 		health = hp;	
 		img = Assets.enemy;
-		boundingBox = new Rectangle(40, 60);
+		collisionBox = new Rectangle(100, 100);
 		rand = new Random();
 	}
 	
 	
 	
 	public void tick()	{
-		
 		if(!isDead()){
-			boundingBox.setBounds(xPos, yPos, 80, 100);
-		
-		
-			if(!Intersects(Game.player.getBoundingBox ()))	{
-				setDirection();		
-				changeAsset();
-			}
-			else	{
-				dealDMG();
-			}
+			collisionBox.setBounds(xPos, yPos, 100, 100);
 		}		
 	}
 	
 	public void render(Graphics g) {
-			
-		g.drawImage(Assets.enemy, xPos, yPos, (lastDir)*80, 100, null);
-	
+		g.drawImage(Assets.enemy, xPos, yPos, (dir)*100, 100, null);
 	}
 	
 	public void changeAsset()	{
 		
 		Rectangle newCrop = Assets.getEnemyCrop();
 			
-				if(isHit()) {
+				if(gotHit()) {
 					newCrop.x = 370;
 					if(newCrop.x + 40 <= 410)	{
 						newCrop.x += 40;
-						setIsHit(false);
+						gotHit(false);
 				}
 				else {
 					newCrop.x = 370;
@@ -72,7 +60,7 @@ public class Enemy {
 				Assets.setEnemyCrop(newCrop);
 			} 
 			
-			else if(!Intersects(Game.player.getBoundingBox()))	{
+			else if(!intersects(Game.player.getCollisionBox()))	{
 				
 				newCrop.y = 10;
 				if(newCrop.x + 40 < 360)	{
@@ -94,14 +82,17 @@ public class Enemy {
 	}
 	public void setxDirection(int x)	{
 		
-		if (getxPos() <= x)	{	//left direction
+		if (getxPos() < x)	{	//left direction
 			setxPos(getxPos() + CONSTANTS.VEL/3);
-			lastDir = -1;
+			dir = -1;
 		}
-		if(getxPos() > x)	{	
+		else if(getxPos() > x)	{	
 				
 			setxPos(getxPos() - CONSTANTS.VEL/3);	
-			lastDir = 1;
+			dir = 1;
+		}
+		else {
+			
 		}
 	}
 	public void setyDirection(int y)	{
@@ -116,8 +107,8 @@ public class Enemy {
 		}
 	}
 	
-	public boolean Intersects(Rectangle r) {
-        if(this.boundingBox.contains(r) || r.contains(this.boundingBox)) {
+	public boolean intersects(Rectangle r) {
+        if(collisionBox.contains(r) || r.contains(collisionBox)) {
             return true;
         }
         return false;
@@ -127,12 +118,14 @@ public class Enemy {
 		
 		int damage = rand.nextInt(5-0) +1;
 		setHealth(getHealth() - damage);		
-		setIsHit(true);
+		gotHit(true);
 	}
+	
 	public void dealDMG(){
 		damage = rand.nextInt((5-1+1) + 1);
 		Game.player.loseHealth(damage);
 	}
+	
 	public boolean isDead()	{
 		if(getHealth() <= 0)	{
  			return true;
@@ -142,7 +135,7 @@ public class Enemy {
 	public void finalize()	{
 		setxPos(0);
 		setyPos(610);
-		setBoundingBox(null);
+		setCollisionBox(null);
 		img = null;
 	}
 	
@@ -180,19 +173,19 @@ public class Enemy {
 		this.yPos = yPos;
 	}
 
-	public Rectangle getBoundingBox() {
-		return boundingBox;
+	public Rectangle getCollisionBox() {
+		return collisionBox;
 	}
 
-	public void setBoundingBox(Rectangle boundingBox) {
-		this.boundingBox = boundingBox;
+	public void setCollisionBox(Rectangle collisionBox) {
+		this.collisionBox = collisionBox;
 	}
 
-	public boolean isHit() {
+	public boolean gotHit() {
 		return isHit;
 	}
 
-	public void setIsHit(boolean isHit) {
+	public void gotHit(boolean isHit) {
 		this.isHit = isHit;
 	}
 

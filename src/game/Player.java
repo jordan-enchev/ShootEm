@@ -11,36 +11,35 @@ import Display.Background;
 import constants.CONSTANTS;
 
 public class Player {
-	private int health, ammo;
+	private int health;
 	private BufferedImage img;
 	private int xPos, yPos, dir;
-	private Rectangle boundingBox;
+	private Rectangle collisionBox;
 	private Random rand;
 	
 	private final int startPos = 400;
 	private final int safeArea = 200;
 	
-	public static boolean hasShot;
+	private boolean hasShot;
 	
-	public  boolean goingUp;
-    public  boolean goingDown;
-    public  boolean goingLeft;
-    public  boolean goingRight;
+	public boolean goingUp;
+    public boolean goingDown;
+    public boolean goingLeft;
+    public boolean goingRight;
     
 	
 	public Player()	{
-		health = 100;
-		//ammo = 30;	
+		health = 100;	
 		img = Assets.player;
 		xPos = startPos;
 		yPos = 400;
-		boundingBox = new Rectangle(100,150);
+		collisionBox = new Rectangle(150,150);
 	}
 
 	public void tick()	{
 
 		
-		boundingBox.setBounds(xPos, yPos, 100, 150);
+		collisionBox.setBounds(xPos, yPos, 150, 150);
 	
 			if(goingDown)	{
 				
@@ -120,14 +119,14 @@ public class Player {
 	
 	public void loseHealth(int damage)
 	{	
-		if(ifHit())	{
-		health -= damage;
-		System.out.println("Damage taken " + damage);
-		System.out.println("Health left " + getHealth());
+		if(isHit())	{
+			health -= damage;
+			System.out.println("Damage taken " + damage);
+			System.out.println("Health left " + getHealth());
 		}
 	}
 	
-	public boolean ifHit()	{
+	public boolean isHit()	{
 		rand = new Random();
 		int hit = rand.nextInt(1-0+1);
 		
@@ -172,8 +171,8 @@ public class Player {
 		this.dir = dir;
 	}
 
-	public Rectangle getBoundingBox() {
-		return boundingBox;
+	public Rectangle getCollisionBox() {
+		return collisionBox;
 	}
 
 	public int getHealth() {
@@ -183,6 +182,15 @@ public class Player {
 	public void setHealth(int health) {
 		this.health = health;
 	}
+
+	public boolean hasShot() {
+		return hasShot;
+	}
+
+	public void hasShot(boolean hasShot) {
+		this.hasShot = hasShot;
+	}
+	
 	
 
 }

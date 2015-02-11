@@ -9,7 +9,7 @@ import constants.CONSTANTS;
 
 public class Bullet {
 
-			private Rectangle boundingBox;											//checks for collision
+			private Rectangle collisionBox;											//checks for collision
 			private int x, y, dir;											//	bullet current position and direction (1 - right, -1 - left)
 			private boolean hasHit;											//	returnrs true on impact
 			BufferedImage img;												
@@ -27,24 +27,17 @@ public class Bullet {
 					this.dir = dir;
 				}
 				
-				boundingBox = new Rectangle(this.x,this.y, 2, 2 );
+				collisionBox = new Rectangle(this.x,this.y, 2, 2 );
 				hasHit = false;
 				
 			}
  			
 			public void tick()	{	
 				
-				boundingBox.setBounds(x, y, 2, 2);
+				collisionBox.setBounds(x, y, 2, 2);
+				
 				if(inBounds())	{
 				x += (dir)*CONSTANTS.VEL*2;
-				}
-				for (Enemy enemy : Game.enemies) {
-					
-					if(Intersects(enemy.getBoundingBox()))	{
-						enemy.loseHP();	
-						hasHit = true;
-					}
-						
 				}
 			}
 			
@@ -61,8 +54,8 @@ public class Bullet {
 				return false;
 			}
 			
-			public boolean Intersects(Rectangle r) {
-		        if(this.boundingBox.contains(r) || r.contains(this.boundingBox)) {
+			public boolean intersects(Rectangle r) {
+		        if(collisionBox.contains(r) || r.contains(collisionBox)) {
 		            return true;
 		        }
 		        return false;
@@ -72,7 +65,7 @@ public class Bullet {
 			public void finalize()	{			
 					x = 0;
 					y = 610;
-					setShot(null);
+					collisionBox = null;
 					}
 
 
@@ -105,23 +98,15 @@ public class Bullet {
 				this.y = y;
 			}
 
-			public Rectangle getShot() {
-				return boundingBox;
+			public Rectangle getCollisionBox() {
+				return collisionBox;
 			}
 
 			public boolean hasHit() {
 				return hasHit;
 			}
 
-			public void setHasHit(boolean hasHit) {
+			public void hasHit(boolean hasHit) {
 				this.hasHit = hasHit;
 			}
-
-			public void setShot(Rectangle shot) {
-				this.boundingBox = shot;
-			}
-
-			
-			
-
 }

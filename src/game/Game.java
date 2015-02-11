@@ -19,73 +19,53 @@ public class Game implements Runnable {
 	private BufferStrategy bs = null;
 	private Input iHandler = null;
 	private Random rand = new Random();
+	private boolean running = false;
 	
-		
-		
-	public static boolean running = false;
 	private Thread thread;
 	
-	public static Background background = null;
+	private Background background = null;	
+	private ArrayList<Enemy> enemies = null;	
+	private ArrayList<Bullet> bullets = null;
+	
 	public static Player player = null;
-	public static ArrayList<Enemy> enemies = null;	
-	public static ArrayList<Bullet> bullets = null;
+
 
 	public Game()	{
 	}
 	
 	public void init()	{
 		display = new Display();
-		if(display == null)	{
-			System.out.println("Failed to init display");
-		}
-		else	{
-			System.out.println("Display inited");
-			
-			Assets.init();
-			background = new Background();
-			if(background == null)	{
-				System.out.println("Failed to init backgroud");
-			}
-			else	{
-				System.out.println("Background inited");
-				iHandler = new Input(this.display);	
-				if(iHandler == null){
-					System.out.println("Failed to init iHandler");
-					}
-				else	{
-					System.out.println("iHandler inited");
-					player = new Player();
-					if (player == null) {
-						System.out.println("Failed to init player");
-						
-					}
-					else {
-						System.out.println("Player inited");
-						enemies = new ArrayList<Enemy>();
-						bullets = new ArrayList<Bullet>();
-						enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
-//						enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
-//						enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
-					}
-				}
-			}
-		}
 		
-	}		
+		Assets.init();
+		background = new Background();
+		
+		iHandler = new Input(this.display);	
+		
+		player = new Player();
+		enemies = new ArrayList<Enemy>();
+		bullets = new ArrayList<Bullet>();
+		
+		enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
+}		
 	
-
 	private void tick() {  
 		
-			
 		player.tick();
-			if(player.hasShot){
-				shoot(new Bullet(player.getxPos(), player.getyPos(), player.getDir()));
-				player.hasShot = false;
-			}
-			if(player.getHealth() <= 0){
-				running = false;
-			}
-		player.changeAsset();
+		if(enemies.isEmpty())	{
+			genEnemy();
+		}
+		
+		if(player.hasShot()){
+			shoot(new Bullet(player.getxPos(), player.getyPos(), player.getDir()));
+			player.hasShot(false);
+		}
+		if(player.getHealth() <= 0){
+			running = false;
+		}
+		if(background.getDir() != 0 || player.isMoving())	{
+			player.changeAsset();
+		}
+			
 		
 		if(player.getxPos() < 110)	{
 			player.setxPos(110);
@@ -107,16 +87,24 @@ public class Game implements Runnable {
 				enemy.finalize();
 			}
 			else	{
-				if(background.dir == 1)	{
+				if(background.getDir() == 1)	{
 	        		enemy.setxPos(enemy.getxPos() + CONSTANTS.VEL);
-	        		background.dir = 0;
+	        		background.setDir(0);
 	        	}
-	        	if(background.dir == -1)	{
+	        	if(background.getDir() == -1)	{
 	        		enemy.setxPos(enemy.getxPos() - CONSTANTS.VEL);
-	        		background.dir = 0;
+	        		background.setDir(0); 
 	        	}
-				enemy.tick();
+	        	
+				enemy.tick();	
 				
+				if(enemy.intersects(player.getCollisionBox ()))	{
+					enemy.dealDMG();
+				}
+				else	{
+					enemy.setDirection();		
+					enemy.changeAsset();
+				}
 			}
 		}
 		
@@ -131,22 +119,23 @@ public class Game implements Runnable {
 			}
 			else	{
 				bullet.tick();
+				for (Enemy enemy : enemies) {
+					if(bullet.intersects(enemy.getCollisionBox()))	{
+						enemy.loseHP();
+						bullet.hasHit(true);
+					}
+				}
 			}
 		}
-		
-		
      }
 	
 
     private void render() {
-     
         bs = display.getgFrame().getBufferStrategy();
         if (bs == null) {
             display.getgFrame().createBufferStrategy(2);
             return;
         }
-        
-       
         g = bs.getDrawGraphics();
         g.clearRect(0, 0, CONSTANTS.WINDOW_WIDTH, CONSTANTS.WINDOW_HEIGHT);
 
@@ -245,15 +234,16 @@ public class Game implements Runnable {
         }
     }
     
-    public static void shoot(Bullet bullet) {
+    public void shoot(Bullet bullet) {
 		bullets.add(bullet);
 	}
 
-	public static ArrayList<Bullet> getBullets() {
+	public ArrayList<Bullet> getBullets() {
 		return bullets;
 	}
-	
-
+	public void genEnemy()	{
+		enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
+	}
     
 
 }
