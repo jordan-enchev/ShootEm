@@ -255,19 +255,26 @@ public class Game implements Runnable {
         return player;
     }
     
-    public void finalize()	{
-    	
-        background = null;
+    public void reset()	{
         enemies = null;
         bullets = null;
-
         player = null;
+        iHandler = null;
+        background = null;
+        eCount = 0;
         running = false;
     }
     
     public void restart()	{
-    	finalize();
-    	start();
+    	reset();
+    	
+    	background = new Background();
+    	player = new Player();
+    	iHandler = new Input(display);
+        enemies = new ArrayList<Enemy>();
+        bullets = new ArrayList<Bullet>();
+    	
+        running = true;
     }
     
 

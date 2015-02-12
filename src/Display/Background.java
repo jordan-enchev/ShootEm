@@ -54,6 +54,10 @@ public class Background {
 
     public void finalize() {
         image = null;
+        x = 0;
+        y = 0;
+        _x = x + CONSTANTS.GAME_WIDTH;
+        _y = y + CONSTANTS.GAME_HEIGHT;
     }
 
     public int getX() {
