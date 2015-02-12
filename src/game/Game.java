@@ -20,6 +20,7 @@ public class Game implements Runnable {
 	private Input iHandler = null;
 	private Random rand = new Random();
 	private boolean running = false;
+	private int eCount = 1;
 	
 	private Thread thread;
 	
@@ -45,38 +46,42 @@ public class Game implements Runnable {
 		enemies = new ArrayList<Enemy>();
 		bullets = new ArrayList<Bullet>();
 		
-		enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
+		genEnemy(eCount);
 }		
 	
 	private void tick() {  
+	
+		//Player
 		
 		player.tick();
 		if(enemies.isEmpty())	{
-			genEnemy();
+			genEnemy(++eCount);
 		}
 		
 		if(player.hasShot()){
 			shoot(new Bullet(player.getxPos(), player.getyPos(), player.getDir()));
 			player.hasShot(false);
 		}
+		
 		if(player.getHealth() <= 0){
 			running = false;
 		}
+		
 		if(background.getDir() != 0 || player.isMoving())	{
 			player.changeAsset();
 		}
-			
 		
 		if(player.getxPos() < 110)	{
 			player.setxPos(110);
 			background.moveRight();
 		}
+		
 		if(player.getxPos() > 600)	{
 			player.setxPos(600);
 			background.moveLeft();
 		}
 		
-		
+	//Enemies
 		
 		
 		int e = enemies.size();
@@ -95,21 +100,11 @@ public class Game implements Runnable {
 	        		enemy.setxPos(enemy.getxPos() - CONSTANTS.VEL);
 	        		background.setDir(0); 
 	        	}
-	        	
-				enemy.tick();	
-				
-				if(enemy.intersects(player.getCollisionBox ()))	{
-					enemy.dealDMG();
-					enemy.changeAsset();
-				}
-				else	{
-					enemy.setDirection(player.getxPos(), player.getyPos());		
-					enemy.changeAsset();
-				}
+				enemy.tick();
 			}
 		}
 		
-		
+		//Bullets
 		
 		int l = bullets.size();
 		while(l-- > 0){
@@ -124,7 +119,8 @@ public class Game implements Runnable {
 				bullet.tick();
 				for (Enemy enemy : enemies) {
 					if(bullet.intersects(enemy.getCollisionBox()))	{
-						enemy.loseHP();
+						enemy.takeDMG();
+						enemy.isHit(false);
 						bullet.hasHit(true);
 					}
 				}
@@ -242,8 +238,18 @@ public class Game implements Runnable {
 	public ArrayList<Bullet> getBullets() {
 		return bullets;
 	}
-	public void genEnemy()	{
-		enemies.add(new Enemy(rand.nextInt(1600), 450, rand.nextInt((100-10)+10)));	
+	public void genEnemy(int eCount)	{
+		for (int i = 0; i < eCount; i++) {
+			
+		
+			Enemy enemy = new Enemy(rand.nextInt(1600), 450, 50);
+			for (Enemy e : enemies) {
+				if(enemy.getCollisionBox().contains(e.getCollisionBox()) || enemy.getCollisionBox().contains(player.getCollisionBox()))	{
+					enemy = new Enemy(rand.nextInt(1600), 450, 50);
+				}
+			}
+			enemies.add(enemy);	
+		}		
 	}
 
 	public static Player getPlayer() {

@@ -32,7 +32,14 @@ public class Enemy {
 	public void tick()	{
 		if(!isDead()){
 			collisionBox.setBounds(xPos, yPos, 80, 100);
-		}		
+		}
+		if(intersects(Game.getPlayer().getCollisionBox ()))	{
+			attack();
+		}
+		else	{
+			setDirection(Game.getPlayer().getxPos(), Game.getPlayer().getyPos());		
+			changeAsset();
+		}
 	}
 	
 	public void render(Graphics g) {
@@ -40,10 +47,18 @@ public class Enemy {
 	}
 	
 	public void changeAsset()	{
-		
 		Rectangle newCrop = Assets.getEnemyCrop();
+		if(isHit)	{
+			newCrop.x = 240;
+			if(newCrop.x + 130 <= 400)	{
+				newCrop.x += 130;
+			}
+			else {
+				newCrop.x = 240;
+			}
+		} 
 
-		if(!intersects(Game.getPlayer().getCollisionBox()))	{
+		else if(!intersects(Game.getPlayer().getCollisionBox()))	{
 			
 			newCrop.y = 10;
 			
@@ -54,15 +69,6 @@ public class Enemy {
 				newCrop.x = 40;
 			}
 		}
-		
-		else	{
-			if(newCrop.x + 40 <= 410)	{
-				newCrop.x += 40;
-			}
-			else {
-				newCrop.x = 370;
-			}
-		} 
 		Assets.setEnemyCrop(newCrop);
 	}
 	
@@ -104,15 +110,16 @@ public class Enemy {
         return false;
     }
 
-	public void loseHP()	{
+	public void takeDMG()	{
 		
 		int damage = rand.nextInt(5-0) +1;
 		setHealth(getHealth() - damage);		
-		gotHit(true);
+		isHit(true);
+		changeAsset();
 	}
 	
-	public void dealDMG(){
-		damage = rand.nextInt((5-1+1) + 1);
+	public void attack(){
+		damage = rand.nextInt((2-1+1) + 1);
 		Game.getPlayer().loseHealth(damage);
 	}
 	
@@ -170,11 +177,11 @@ public class Enemy {
 		this.collisionBox = collisionBox;
 	}
 
-	public boolean gotHit() {
+	public boolean isHit() {
 		return isHit;
 	}
 
-	public void gotHit(boolean isHit) {
+	public void isHit(boolean isHit) {
 		this.isHit = isHit;
 	}
 

@@ -37,6 +37,7 @@ public class Bullet {
 				if(inBounds())	{
 				x += (dir)*CONSTANTS.VEL*3;
 				}
+				changeAsset();
 			}
 			
 			public void render(Graphics g)	{
@@ -57,6 +58,21 @@ public class Bullet {
 		        }
 		        return false;
 		    }
+			
+			public void changeAsset()	{	
+				Rectangle newCrop = Assets.getBulletCrop();
+				if(!hasHit){
+					if(newCrop.x+30 <= 300)	{
+						newCrop.x += 30;
+					}
+					else 	{
+						newCrop.x = 0;
+					}
+				}
+				Assets.setBulletCrop(newCrop);
+				
+			}
+			
 			public void finalize()	{			
 					x = 0;
 					y = 610;
