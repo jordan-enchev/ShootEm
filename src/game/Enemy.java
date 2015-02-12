@@ -38,8 +38,8 @@ public class Enemy {
 		}
 		else	{
 			setDirection(Game.getPlayer().getxPos(), Game.getPlayer().getyPos());		
-			changeAsset();
 		}
+		changeAsset();
 	}
 	
 	public void render(Graphics g) {
