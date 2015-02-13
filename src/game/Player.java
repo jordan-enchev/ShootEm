@@ -91,10 +91,10 @@ public class Player {
     }
 
     public void render(Graphics g) {
-        g.drawImage(Assets.player, this.xPos, this.yPos, null);
+        g.drawImage(Assets.player, xPos, yPos, null);
     }
 
-    public void loseHealth(int damage) {
+    public void takeDMG(int damage) {
         if (isHit() && !isDead()) {
             health -= damage;
             System.out.println("Damage taken " + damage);

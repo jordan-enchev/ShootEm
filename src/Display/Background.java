@@ -1,5 +1,6 @@
 package Display;
 
+import game.Enemy;
 import gfx.Assets;
 
 import java.awt.Graphics;
@@ -58,6 +59,19 @@ public class Background {
         y = 0;
         _x = x + CONSTANTS.GAME_WIDTH;
         _y = y + CONSTANTS.GAME_HEIGHT;
+    }
+    
+    public void offSet(Enemy enemy){
+    	
+    	if(dir == 1){
+    		 enemy.setxPos(enemy.getxPos() + CONSTANTS.VEL);
+    		 dir = 0;
+    	}
+    	if(dir == -1){
+    		 enemy.setxPos(enemy.getxPos() - CONSTANTS.VEL);
+    		 dir = 0;
+    	}
+    	
     }
 
     public int getX() {

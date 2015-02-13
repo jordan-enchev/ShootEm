@@ -2,7 +2,6 @@ package game;
 
 import gfx.Assets;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
@@ -17,11 +16,10 @@ public class Game implements Runnable {
     private Display display = null;
     private Graphics g = null;
     private BufferStrategy bs = null;
-    @SuppressWarnings("unused")
     private Input iHandler = null;
     private Random rand = new Random();
     private boolean running = false;
-    private int eCount = 1;
+    private int eCount;
 
     private Thread thread;
 
@@ -44,6 +42,7 @@ public class Game implements Runnable {
 
         player = new Player();
         enemies = new ArrayList<Enemy>();
+        eCount = enemies.size();
         bullets = new ArrayList<Bullet>();
 
         genEnemy(eCount);
@@ -91,16 +90,10 @@ public class Game implements Runnable {
             if (enemy.isDead()) {
                 enemy.finalize();
                 enemies.remove(enemy);
-            } else {
-                if (background.getDir() == 1) {
-                    enemy.setxPos(enemy.getxPos() + CONSTANTS.VEL);
-                    background.setDir(0);
-                }
-                if (background.getDir() == -1) {
-                    enemy.setxPos(enemy.getxPos() - CONSTANTS.VEL);
-                    background.setDir(0);
-                }
-                enemy.tick();
+            }
+            else {
+               background.offSet(enemy);
+               enemy.tick();
             }
         }
 
@@ -255,23 +248,12 @@ public class Game implements Runnable {
         return player;
     }
     
-    public void reset()	{
-        enemies = null;
-        bullets = null;
-        player = null;
-        iHandler = null;
-        background = null;
-        eCount = 0;
-        running = false;
-    }
-    
     public void restart()	{
-    	reset();
-    	
     	background = new Background();
     	player = new Player();
     	iHandler = new Input(display);
         enemies = new ArrayList<Enemy>();
+        eCount = enemies.size();
         bullets = new ArrayList<Bullet>();
     	
         running = true;

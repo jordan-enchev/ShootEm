@@ -4,6 +4,7 @@ import gfx.Assets;
 
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 import constants.CONSTANTS;
@@ -13,6 +14,7 @@ public class Enemy {
 	private int xPos, yPos, dir, health;
 	private Rectangle collisionBox;
 	
+	private BufferedImage img;
 	private Random rand;
 	private int damage = 0;
 	private boolean isHit = false;
@@ -22,6 +24,7 @@ public class Enemy {
 		xPos = x;
 		yPos = y;
 		dir = 0;
+		img = Assets.enemy;
 		health = hp;	
 		collisionBox = new Rectangle(80, 100);
 		rand = new Random();
@@ -43,7 +46,7 @@ public class Enemy {
 	}
 	
 	public void render(Graphics g) {
-		g.drawImage(Assets.enemy, xPos, yPos, (dir)*80, 100, null);
+		g.drawImage(img, xPos, yPos, (dir)*80, 100, null);
 	}
 	
 	public void changeAsset()	{
@@ -70,6 +73,7 @@ public class Enemy {
 			}
 		}
 		Assets.setEnemyCrop(newCrop);
+		img = Assets.enemy;
 	}
 	
 	public void setDirection(int x, int y)	{
@@ -120,7 +124,7 @@ public class Enemy {
 	
 	public void attack(){
 		damage = rand.nextInt((2-1+1) + 1);
-		Game.getPlayer().loseHealth(damage);
+		Game.getPlayer().takeDMG(damage);
 	}
 	
 	public boolean isDead()	{
@@ -133,6 +137,9 @@ public class Enemy {
 		setxPos(0);
 		setyPos(610);
 		setCollisionBox(null);
+		rand = null;
+		img = null;
+				
 	}
 	
 	//	

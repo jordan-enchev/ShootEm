@@ -31,9 +31,11 @@ public class Bullet {
     }
 
     public void tick() {
-
-        collisionBox.setBounds(x, y, 2, 2);
-
+    	if(dir == -1)
+    		collisionBox.setBounds(x, y, 2, 2);
+    	if (dir == 1)
+    		collisionBox.setBounds(x+60, y, 2, 2);
+    	
         if (inBounds()) {
             x += (dir) * CONSTANTS.VEL * 3;
         }
