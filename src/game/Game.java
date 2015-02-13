@@ -23,12 +23,12 @@ public class Game implements Runnable {
 
     private Thread thread;
 
-    private Background background = null;
+    
     private ArrayList<Enemy> enemies = null;
     private ArrayList<Bullet> bullets = null;
 
     private static Player player = null;
-
+    private static Background background = null;
     public Game() {
     }
 
@@ -76,6 +76,7 @@ public class Game implements Runnable {
         if (player.getxPos() < 110) {
             player.setxPos(110);
             background.moveRight();
+            
         }
 
         if (player.getxPos() > 600) {
@@ -92,10 +93,11 @@ public class Game implements Runnable {
                 enemies.remove(enemy);
             }
             else {
-               background.offSet(enemy);
+               enemy.offSet(background);
                enemy.tick();
             }
         }
+        background.setDir(0);
 
         //Bullets
         int l = bullets.size();
@@ -244,9 +246,7 @@ public class Game implements Runnable {
         }
     }
 
-    public static Player getPlayer() {
-        return player;
-    }
+    
     
     public void restart()	{
     	background = new Background();
@@ -255,9 +255,16 @@ public class Game implements Runnable {
         enemies = new ArrayList<Enemy>();
         eCount = enemies.size();
         bullets = new ArrayList<Bullet>();
-    	
         running = true;
     }
+    
+    public static Player getPlayer() {
+        return player;
+    }
+
+	public static Background getBackground() {
+		return background;
+	}
     
 
 }

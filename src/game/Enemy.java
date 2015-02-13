@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
+import Display.Background;
 import constants.CONSTANTS;
 
 public class Enemy {
@@ -106,6 +107,19 @@ public class Enemy {
 				setyPos(getyPos() - CONSTANTS.VEL/2);
 		}
 	}
+	
+	
+	
+public void offSet(Background bck){
+    	
+    	if(bck.getDir() == 1){
+    		 xPos = xPos + CONSTANTS.VEL;
+    	}
+    	if(bck.getDir() == -1){
+    		 xPos = xPos - CONSTANTS.VEL;
+    	}	
+    }
+	
 	
 	public boolean intersects(Rectangle r) {
         if(collisionBox.contains(r) || r.contains(collisionBox)) {

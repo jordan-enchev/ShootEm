@@ -61,18 +61,7 @@ public class Background {
         _y = y + CONSTANTS.GAME_HEIGHT;
     }
     
-    public void offSet(Enemy enemy){
-    	
-    	if(dir == 1){
-    		 enemy.setxPos(enemy.getxPos() + CONSTANTS.VEL);
-    		 dir = 0;
-    	}
-    	if(dir == -1){
-    		 enemy.setxPos(enemy.getxPos() - CONSTANTS.VEL);
-    		 dir = 0;
-    	}
-    	
-    }
+    
 
     public int getX() {
         return x;
