@@ -19,16 +19,17 @@ public class Game implements Runnable {
     private Input iHandler = null;
     private Random rand = new Random();
     private boolean running = false;
-    private int eCount;
+
 
     private Thread thread;
 
-    
+    private Background background = null;
     private ArrayList<Enemy> enemies = null;
     private ArrayList<Bullet> bullets = null;
+    private int eCount = 0;
 
     private static Player player = null;
-    private static Background background = null;
+    
     public Game() {
     }
 
@@ -42,18 +43,22 @@ public class Game implements Runnable {
 
         player = new Player();
         enemies = new ArrayList<Enemy>();
-        eCount = enemies.size();
         bullets = new ArrayList<Bullet>();
 
-        genEnemy(eCount);
+        genEnemy();
+        eCount++;
     }
 
     private void tick() {
 
         //Player
         player.tick();
+        
         if (enemies.isEmpty()) {
-            genEnemy(++eCount);
+        	for(int i = 0; i < eCount; i++){
+        		genEnemy(); 
+        	}
+    		     eCount++;
         }
 
         if (player.hasShot()) {
@@ -162,10 +167,10 @@ public class Game implements Runnable {
         init();
 
         //Sets the frames per seconds
-        int fps = 30;
+        int fps = 60;
         //1 000 000 000 nanoseconds in a second. Thus we measure time in nanoseconds
         //to be more specific. Maximum allowed time to run the tick() and render() methods
-        double timePerTick = 1_000_000_000.0 / fps;
+        double timePerTick = 2_000_000_000.0 / fps;
         //How much time we have until we need to call our tick() and render() methods
         double delta = 0;
         //The current time in nanoseconds
@@ -194,7 +199,7 @@ public class Game implements Runnable {
                 delta--;
             }
 
-            if (timer >= 1_000_000_000) {
+            if (timer >= 2_000_000_000) {
                 ticks = 0;
                 timer = 0;
             }
@@ -233,38 +238,37 @@ public class Game implements Runnable {
         return bullets;
     }
 
-    public void genEnemy(int eCount) {
-        for (int i = 0; i < eCount; i++) {
+    public void genEnemy() {
+    	boolean isStacked = false;
 
             Enemy enemy = new Enemy(rand.nextInt(1600), 450, 50);
+            
             for (Enemy e : enemies) {
-                if (enemy.getCollisionBox().contains(e.getCollisionBox()) || enemy.getCollisionBox().contains(player.getCollisionBox())) {
-                    enemy = new Enemy(rand.nextInt(1600), 450, 50);
+                if (enemy.getCollisionBox().contains(e.getCollisionBox())) {
+                    isStacked = true;
                 }
             }
-            enemies.add(enemy);
-        }
+            if(enemy.getCollisionBox().contains(player.getCollisionBox()))	{
+            	isStacked = true;
+            }
+            
+            if(!isStacked)	{
+            	enemies.add(enemy);
+            }
+            else	{
+            	enemy.finalize();
+            }  
     }
 
-    
-    
     public void restart()	{
     	background = new Background();
     	player = new Player();
     	iHandler = new Input(display);
         enemies = new ArrayList<Enemy>();
-        eCount = enemies.size();
         bullets = new ArrayList<Bullet>();
-        running = true;
     }
     
     public static Player getPlayer() {
         return player;
     }
-
-	public static Background getBackground() {
-		return background;
-	}
-    
-
 }
